@@ -17,14 +17,24 @@
     body {
       font-family: "Montserrat", sans-serif;
       font-weight: 200;
-      color: var(--tg-theme-text-color);
-      background: var(--tg-theme-bg-color);
+      color: #ffffff;
+      background: #000000ff;
     }
 
-    #main {
+    .target {
+      width: 100%;
+      padding: 20px;
+    }
+
+    #menu {
       width: 100%;
       padding: 20px;
       text-align: center;
+      display: none;
+    }
+
+    .any {
+      display: none;
     }
 
     h1 {
@@ -39,84 +49,132 @@
       width: 350px;
       margin: 0 auto;
     }
+    .center {
+      text-align: center;
+    }
     button {
       border: 0;
-      border-radius: 5px;
-      margin-top: 50px;
-      height: 60px;
-      width: 200px;
+      border-radius: 12px;
+      margin-top: 25px;
+      height: 30px;
+      width: 100px;
       font-size: 20px;
-      font-weight: 500;
+      font-weight: 250;
       cursor: pointer;
       transition: all 500ms ease;
-      color: var(--tg-theme-button-color);
-      background: var(--tg-theme-button-text-color);
+      color: #ffffff;
+      background: #da9100;
     }
     button:hover {
-      background: var(--tg-theme-secondary-bg-color);
+      background: #00a256;
     }
-    #form {
-      display: none;
-    }
+
     input {
       width: 90%;
       outline: none;
       margin: 10px 5%;
       padding: 15px 10px;
-      font-size: 14px;
+      font-size: 10px;
       border: 2px solid silver;
       border-radius: 5px;
     }
     input:focus {
-      border-color: #db5d5d;
+      border-color: #009900;
+    }
+    .menubtn {
+        background-color: #da9100;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url('1.png');
+        background-size: cover;
+        background-position: center;
+        width: 10px;
+        height: 10px;
+    }
+    .menubtnbtn {
+        background-color: #da9100;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 10px;
+        border-radius: 0;
     }
   </style>
 </head>
 <body>
-  <div id="main">
-    <h1>Онлайн магазин</h1>
-    <img src="1.png">
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima, corrupti repellendus, sapiente et sed tempore, aliquid at vero repellat recusandae iusto doloremque necessitatibus neque voluptatum veritatis ea consectetur molestiae esse?</p>
-    <button id="buy">Купить</button>
-  </div>
-  <form id="form">
-	<button id="back">Главное</button>
-    <input type="text" placeholder="Имя" id="user_name">
-    <input type="text" placeholder="Email" id="Email">
-    <input type="text" placeholder="Телефон" id="phone">
-    <button id="order" type="button">Оформить</button> <!-- Тип кнопки изменен на "button" -->
-  </form>
+    <button id="menubtn" class="menubtn"></button>
+    <div id="main">
+        <h1 class="center">Главное</h1>
+        <div class="center"><img src="1.png"></div>
+        <p class="center">Теперь тут нет испанского, радуйтесь. Данный бот само совершенство! Его содатель просто улетный чел. Скорее всего он нереально популярен и он невероятный сигма(Про сигму уже факт, он реальный сигма)</p>
+
+    </div>
+    <menu id="menu">
+      <button id="mainbtn" class="menubtnbtn">Главное</button>
+      <button id="notmainbtn" class="menubtnbtn">Не главное</button>
+      <button id="aboutbtn" class="menubtnbtn">О нас</button>
+    </menu>
+    <div id="site-2" class="any">
+      <h1 class="center">Не особо главное</h1>
+      <div class="center"><img src="1.png"></div>
+      <p class="center">Бетмен любит бабушек</p>
+    </div>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     let tg = window.Telegram.WebApp; // Правильное имя объекта
-    let buy = document.getElementById("buy");
-    let order = document.getElementById("order");
-	let form = document.getElementById("form")
+    let main = document.getElementById("main");
+    let site2btn = document.getElementById("notmainbtn");
+    let mainbtn = document.getElementById("mainbtn");
+    let menubtn = document.getElementById("menubtn");
+    let site2 = document.getElementById("site-2");
+    let menu = document.getElementById("menu");
     tg.expand();
 
-    buy.addEventListener("click", () => {
-      document.getElementById("main").style.display = "none";
-      document.getElementById("form").style.display = "block";
-      document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name;
+
+    function closeall() {
+      main.style.display = "none";
+      site2.style.display = "none";
+      menu.style.display = "none";
+
+    }
+
+    document.getElementById("aboutbtn").addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
+      window.location.href = "https://telegra.ph/O-nas-10-03-8";
     });
 
-	form.addEventListener("click", () => {
-		document.getElementById("main").style.display = "block";
-		document.getElementById("form").style.display = "none";
-	});
 
-    order.addEventListener("click", () => {
-      let name = document.getElementById("user_name").value; // Правильное получение значения
-      let email = document.getElementById("Email").value;
-      let phone = document.getElementById("phone").value;
-      let data = {
-        name: name,
-        email: email,
-        phone: phone
-      };
-      tg.sendData(JSON.stringify(data));
-      tg.close(); // Закрытие сессии, скобки добавлены
+    menubtn.addEventListener("click", () => {
+        closeall();
+        document.getElementById("menu").style.display = "block";
     });
+
+    mainbtn.addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
+
+    });
+
+    site2btn.addEventListener("click", () => {
+      closeall();
+      document.getElementById("site-2").style.display = "block";
+    });
+
   </script>
 </body>
 </html>
