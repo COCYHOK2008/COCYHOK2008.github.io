@@ -17,8 +17,8 @@
     body {
       font-family: "Montserrat", sans-serif;
       font-weight: 200;
-      color: #ffffff;
-      background: #000000ff;
+      color: var(--tg-theme-text-color);
+      background: var(--tg-theme-bg-color);
     }
 
     .target {
@@ -126,6 +126,7 @@
     <menu id="menu">
       <button id="mainbtn" class="menubtnbtn">Главное</button>
       <button id="notmainbtn" class="menubtnbtn">Не главное</button>
+      <button id="Enhilaboutbtn" class="menubtnbtn">О Enhil</button>
       <button id="aboutbtn" class="menubtnbtn">О нас</button>
     </menu>
     <div id="site-2" class="any">
@@ -156,6 +157,12 @@
       closeall();
       main.style.display = "block";
       window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");
+    });
+
+    document.getElementById("Enhilaboutbtn").addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
+      window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");
     });
 
 
