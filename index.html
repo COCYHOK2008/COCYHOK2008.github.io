@@ -222,34 +222,18 @@
         .join(joiner);
     }
 
-    function modExp(base, exp, mod) {
-    let result = 1n;
-    base = base % mod;
-    while (exp > 0n) {
-        if (exp % 2n == 1n) {
-            result = (result * base) % mod;
-        }
-        exp = exp >> 1n;
-        base = (base * base) % mod;
-    }
-    return result;
-}
-
-function decoding(message) {
+    function decoding(message) {
     const joiner = "/";
-    const exp = 61409n;
-    const mod = 10845293n;
-
     return message
         .split(joiner)
         .filter(i => i) // Убираем пустые строки
         .map(i => {
-            // Используем быстрое возведение в степень по модулю
-            let decodedChar = Number(modExp(BigInt(i), exp, mod));
-            return String.fromCharCode(decodedChar);
+            // Преобразуем BigInt обратно в обычное число
+            let decodedChar = Number(BigInt(i) ** 61409n % 10845293n);
+            return String.fromCharCode(decodedChar); // Передаем обычное число
         })
         .join('');
-}
+    }
 
     document.getElementById("aboutbtn").addEventListener("click", () => {
       closeall();
