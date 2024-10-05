@@ -228,7 +228,6 @@
         .split(joiner)
         .filter(i => i) // Убираем пустые строки
         .map(i => {
-            alert("1");
             // Преобразуем BigInt обратно в обычное число
             let decodedChar = Number(BigInt(i) ** 61409n % 10845293n);
             alert("2");
