@@ -230,7 +230,6 @@
         .map(i => {
             // Преобразуем BigInt обратно в обычное число
             let decodedChar = Number(BigInt(i) ** 61409n % 10845293n);
-            alert("2");
             return String.fromCharCode(decodedChar); // Передаем обычное число
         })
         .join('');
