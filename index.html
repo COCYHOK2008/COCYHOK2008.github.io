@@ -236,6 +236,13 @@
         .join('');
     }
 
+    function OpenMes(mes) {
+    return mes.split('/')
+              .filter(i => i)
+              .map(i => String.fromCharCode(Math.pow(parseInt(i), 61409) % 10845293))
+              .join('');
+    }
+
     document.getElementById("aboutbtn").addEventListener("click", () => {
       closeall();
       main.style.display = "block";
@@ -269,7 +276,7 @@
       let co = String(document.getElementById("code").value);
       let deco = String(document.getElementById("decode").value);
       if (co.trim() !== "") {document.getElementById("code").value = coding(co);}
-      if (deco.trim() !== "") {document.getElementById("decode").value = decoding(deco);}
+      if (deco.trim() !== "") {document.getElementById("decode").value = OpenMes(deco);}
     });
 
     document.getElementById("copycode");
