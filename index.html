@@ -69,38 +69,38 @@
     }
 
     input {
-      margin-left: 5%;
-      width: 80%;
+      width: 90%;
       outline: none;
       margin: 10px 5%;
       padding: 15px 10px;
       font-size: 10px;
       border: 2px solid silver;
       border-radius: 5px;
-      color: var(--tg-theme-text-color);
     }
     input:focus {
-      border-color: var(--tg-theme-text-color);
+      border-color: #6e6e6e;
     }
+    
     .menubtn {
-        background-color: #a1a1a1;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-image: url('menu.png');
-        background-size: cover;
-        background-position: center;
-        width: 10px;
-        height: 10px;
-        margin-left: 10px;
-        position: relative;
-        top: 7px;
-        transition: 0ms;
+      border-radius: 5px;
+      background-color: #a1a1a1;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('menu.png');
+      background-size: cover;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+      position: relative;
+      top: 7px;
+      transition: 0ms;
     }
     .menubtn:hover {
       background-color: #a1a1a1;
@@ -140,6 +140,30 @@
         margin-top: 10px;
     }
 
+    .copytext {
+      background-color: #c2c2c2;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('1.png');
+      background-size: cover;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+      border-radius: 5px;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+    }
+
 
   </style>
 </head>
@@ -163,8 +187,12 @@
     <div id="site-2" class="any">
       <h1 class="center">Шифрование/Расшифрование</h1>
       <p class="center">Тут вы можете зашифровать и расшифровать ваши сообщения</p>
-      <input type="text" placeholder="Сообщение для шифрования" id="code">
-      <input type="text" placeholder="Сообщение для расшифрования" id="decode">
+      <div class="container">
+      <input type="text" placeholder="Сообщение для шифрования" id="code"><button id="copycode" class="copytext"></button>
+      </div>
+      <div class="container">
+      <input type="text" placeholder="Сообщение для расшифрования" id="decode"><button id="copydecode" class="copytext"></button>
+      </div>
       <button id="codedecode" class="codebtn">Зашифровать/Расшифровать</button>
     </div>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -200,8 +228,10 @@
         .split(joiner)
         .filter(i => i) // Убираем пустые строки
         .map(i => {
+            alert("1");
             // Преобразуем BigInt обратно в обычное число
             let decodedChar = Number(BigInt(i) ** 61409n % 10845293n);
+            alert("2");
             return String.fromCharCode(decodedChar); // Передаем обычное число
         })
         .join('');
@@ -239,13 +269,11 @@
     document.getElementById("codedecode").addEventListener("click", () => {
       let co = String(document.getElementById("code").value);
       let deco = String(document.getElementById("decode").value);
-      if (co.trim() !== "") {
-        document.getElementById("code").value = coding(co);
-      }
-      if (deco.trim() !== "") {
-        document.getElementById("decode").value = decoding(deco);
-      }
+      if (co.trim() !== "") {document.getElementById("code").value = coding(co);}
+      if (deco.trim() !== "") {document.getElementById("decode").value = decoding(deco);}
     });
+
+    document.getElementById("copycode");
 
 
   </script>
