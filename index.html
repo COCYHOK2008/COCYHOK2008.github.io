@@ -150,13 +150,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-image: url('1.png');
+      background-image: url('copy.jpg');
       background-size: cover;
       background-position: center;
       width: 10px;
       height: 10px;
       margin-left: 10px;
       border-radius: 5px;
+      position: fixed;
+      left: 2px;
     }
 
     .container {
@@ -171,7 +173,7 @@
     <button id="menubtn" class="menubtn"></button>
     <div id="main">
         <h1 class="center">Главное</h1>
-        <div class="center"><img src="1.png"></div>
+        <div class="center"><img style="border-radius: 100%;" src="https://cdn4.cdn-telegram.org/file/pDmqig6nRHgAB40SLSe3bqB-ZCD2nqNeI2bwV9nsUsxJOFLyoX1Bd0XwOE5w_XnHqLUnL2PYx1cGUlR6KSKzYvrXji57F3xZBlge_pUHN0YOca1R3QuQrW_nnZFGQ-E4M3-fPdz5Jx64wKKcNQihplstxNxC7GbNXbdAtsjoeu5WdS8-BYlnP76NR9BVJc0yxT13CaKRzHZBLHBHQJhfHSR-LXeUYOpCqi4izzVePllTatxFfj7cO1rhK4y9Amn684oEw2dfHQz9LxtAuLD8L-AV5AnV0bG0GHaLsMou2eDF-gSmv1I1359GKKEo59bAlSg0nCTc9angzoIbVRGb7A.jpg"></div>
         <p class="center">Теперь тут нет испанского, радуйтесь. Данный бот само совершенство! Его содатель просто улетный чел. Он рил запарился и ему можно задонатить монетку. Связаться с ним можно здесь</p>
 
     </div>
@@ -271,7 +273,23 @@
       if (deco.trim() !== "") {document.getElementById("decode").value = decoding(deco);}
     });
 
-    document.getElementById("copycode");
+    document.getElementById("copycode").addEventListener("click", () => {
+      let text = String(document.getElementById("code").value);
+      if (text.trim() == "") {}
+      else {
+        navigator.clipboard.writeText(text);
+        document.getElementById("code").value = "";
+      }
+    });
+
+    document.getElementById("copydecode").addEventListener("click", () => {
+      let text = String(document.getElementById("decode").value);
+      if (text.trim() == "") {}
+      else {
+        navigator.clipboard.writeText(text);
+        document.getElementById("decode").value = "";
+      }
+    });
 
 
   </script>
