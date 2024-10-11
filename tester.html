@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Куки пример</title>
+</head>
+<body>
+
+<h2 id="message"></h2>
+
+<script>
+  // Функция для установки куки
+  function setCookie(name, value, days) {
+    let date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Срок хранения куки
+    let expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  }
+
+  // Функция для получения куки
+  function getCookie(name) {
+    let matches = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return matches ? matches[2] : null;
+  }
+
+  // Проверка на первый визит
+  let firstTime = getCookie("firsttime");
+
+  if (firstTime === "true" || firstTime === null) {
+    // Первый раз на сайте
+    document.getElementById("message").textContent = "Ты новенький!";
+    // Устанавливаем куки на "false", чтобы при следующем заходе не считалось первым визитом
+    setCookie("firsttime", "false", 365); // Храним куки 1 год
+  } else {
+    // Если это не первый визит
+    document.getElementById("message").textContent = "Ты тут уже не в первый раз!";
+  }
+</script>
+
+</body>
+</html>
