@@ -17,8 +17,7 @@
     body {
       font-family: "Montserrat", sans-serif;
       font-weight: 200;
-      color: black;
-      background: white;
+      transition: background-color 0.5s, color 0.5s;
     }
 
     .target {
@@ -57,20 +56,6 @@
     }
     .center {
       text-align: center;
-    }
-    .codebtn {
-      border: 0;
-      border-radius: 12px;
-      margin-top: 25px;
-      height: 50px;
-      width: 300px;
-      font-size: 20px;
-      font-weight: 250;
-      cursor: pointer;
-      color: #ffffff;
-      background: #a1a1a1;
-      position: relative;
-      left: 17px;
     }
 
     input {
@@ -128,7 +113,7 @@
     }
 
     .menubtnbtn {
-        background-color: #bfbfbf;
+        background-color: #d2d2d2;
         color: white;
         padding: 16px;
         font-size: 16px;
@@ -145,34 +130,63 @@
         margin-top: 10px;
     }
 
-    .copytext {
-      background-color: #c2c2c2;
-      color: white;
-      padding: 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-image: url('copy.jpg');
-      background-size: cover;
-      background-position: center;
-      width: 10px;
-      height: 10px;
-      margin-left: 10px;
-      border-radius: 5px;
+    .light-theme {
+        background-color: #ffffff;
+        color: #000000;
     }
+    .dark-theme {
+        background-color: #000000;
+        color: #ffffff;
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+    
+    .tonkoin {
 
-    .container {
-      display: flex;
-      align-items: center;
+      margin-left: 10px;
     }
 
 
   </style>
 </head>
-<body>
+<body class="light-theme">
     <button id="menubtn" class="menubtn"></button>
     <div id="main" class="center">
         <h1>Главное</h1>
@@ -182,7 +196,7 @@
     </div>
     <menu id="menu">
       <button id="mainbtn" class="menubtnbtn">Главное</button>
-      <button id="site2btn" class="menubtnbtn">Шифрование/Расшифрование</button>
+      <button id="themebtn" class="menubtnbtn">Оформление</button>
 
 
 
@@ -190,55 +204,36 @@
       <button id="aboutbtn" class="menubtnbtn">О нас</button>
       <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
     </menu>
-    <div id="site-2" class="any">
-      <h1 class="center">Шифрование/Расшифрование</h1>
-      <p class="center">Тут вы можете зашифровать и расшифровать ваши сообщения</p>
-      <div class="container">
-      <input type="text" placeholder="Сообщение для шифрования" id="code"><button id="copycode" class="copytext"></button>
+    <div id="theme" class="any">
+      <h1 class="center">Оформление</h1>
+      <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
+        <h1>Тема интерфейса</h1>
+        <div style="display: flex; align-items: center;">
+          <label class="switch">
+            <input type="checkbox" id="toggle">
+            <span class="slider"></span>
+          </label>
+          <h2 style="margin-left: 10px;">Светлая/Темная</h2>
+        </div>
       </div>
-      <div class="container">
-      <input type="text" placeholder="Сообщение для расшифрования" id="decode"><button id="copydecode" class="copytext"></button>
-      </div>
-      <button id="codedecode" class="codebtn">Зашифровать/Расшифровать</button>
     </div>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     let tg = window.Telegram.WebApp; // Правильное имя объекта
     let main = document.getElementById("main");
-    let site2btn = document.getElementById("site2btn");
+    let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
     let menubtn = document.getElementById("menubtn");
-    let site2 = document.getElementById("site-2");
+    let theme = document.getElementById("theme");
     let menu = document.getElementById("menu");
     tg.expand();
 
 
     function closeall() {
       main.style.display = "none";
-      site2.style.display = "none";
+      theme.style.display = "none";
       menu.style.display = "none";
 
-    }
-
-    function coding(message) {
-    const joiner = "/";
-    return message
-        .split('')
-        .map(char => BigInt(char.charCodeAt(0)) ** 353n % 10845293n)
-        .join(joiner);
-    }
-
-    function decoding(message) {
-    const joiner = "/";
-    return message
-        .split(joiner)
-        .filter(i => i) // Убираем пустые строки
-        .map(i => {
-            // Преобразуем BigInt обратно в обычное число
-            let decodedChar = Number(BigInt(i) ** 61409n % 10845293n);
-            return String.fromCharCode(decodedChar); // Передаем обычное число
-        })
-        .join('');
     }
 
     document.getElementById("aboutbtn").addEventListener("click", () => {
@@ -265,35 +260,21 @@
 
     });
 
-    site2btn.addEventListener("click", () => {
+    themebtn.addEventListener("click", () => {
       closeall();
-      document.getElementById("site-2").style.display = "block";
+      document.getElementById("theme").style.display = "block";
     });
 
-    document.getElementById("codedecode").addEventListener("click", () => {
-      let co = String(document.getElementById("code").value);
-      let deco = String(document.getElementById("decode").value);
-      if (co.trim() !== "") {document.getElementById("code").value = coding(co);}
-      if (deco.trim() !== "") {document.getElementById("decode").value = decoding(deco);}
-    });
-
-    document.getElementById("copycode").addEventListener("click", () => {
-      let text = String(document.getElementById("code").value);
-      if (text.trim() == "") {}
-      else {
-        navigator.clipboard.writeText(text);
-        document.getElementById("code").value = "";
+    document.getElementById('toggle').addEventListener('change', function () {
+      if (this.checked) {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
       }
     });
 
-    document.getElementById("copydecode").addEventListener("click", () => {
-      let text = String(document.getElementById("decode").value);
-      if (text.trim() == "") {}
-      else {
-        navigator.clipboard.writeText(text);
-        document.getElementById("decode").value = "";
-      }
-    });
 
 
   </script>
