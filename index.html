@@ -212,7 +212,6 @@
       </div>
     </div>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="back.js"></script>
   <script>
     let tg = window.Telegram.WebApp; // Правильное имя объекта
     let main = document.getElementById("main");
@@ -225,6 +224,19 @@
 
 
 
+    // Функция для установки куки
+    setCookie(name, value, days) {
+      let date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Срок хранения куки
+      let expires = "expires=" + date.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+            
+    // Функция для получения куки
+    getCookie(name) {
+      let matches = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return matches ? matches[2] : null;
+    }
 
 
     function closeall() {
@@ -243,6 +255,9 @@
       document.documentElement.style.setProperty("--color-text", "#ffffff");
       document.documentElement.style.setProperty("--color-btn", "#eeeeee");
     }
+
+
+
 
 
 
