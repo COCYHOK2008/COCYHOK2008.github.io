@@ -260,7 +260,10 @@
         document.body.classList.add('dark-theme');
         darkmode();
         togglethemetext.checked = true;
-      } else {}
+      } else {
+        document.body.classList.add('white-theme');
+        whitemode();
+      }
     };
 
 
@@ -270,7 +273,10 @@
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
         toggletheme.checked = true;
-      } else {}
+      } else {
+        document.body.classList.add('white-theme');
+        whitemode();
+      }
     };
 
     toggletheme.addEventListener('change', function () {
