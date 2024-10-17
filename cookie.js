@@ -17,12 +17,3 @@ class cookie {
         return matches ? matches[2] : null;
     }
 }
-
-function darkmode() {
-    document.documentElement.style.setProperty("--color-text", "#ffffff");
-    document.documentElement.style.setProperty("--color-btn", "#5b5b5b");
-}
-function whitemode() {
-    document.documentElement.style.setProperty("--color-text", "#000000");
-    document.documentElement.style.setProperty("--color-btn", "#d2d2d2");
-}
