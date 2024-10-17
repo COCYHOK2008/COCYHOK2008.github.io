@@ -180,37 +180,29 @@
         <p>Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
 
     </div>
-    <menu id="menu">
-      <button id="mainbtn" class="menubtnbtn">Главное</button>
-      <button id="themebtn" class="menubtnbtn">Оформление</button>
+      <menu id="menu">
+        <button id="mainbtn" class="menubtnbtn">Главное</button>
+        <button id="themebtn" class="menubtnbtn">Оформление</button>
 
 
 
-      <button id="Enhilaboutbtn" class="menubtnbtn">О Enhil</button>
-      <button id="aboutbtn" class="menubtnbtn">О нас</button>
-      <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
-    </menu>
-    <div id="theme" class="any">
-      <h1 class="center">Оформление</h1>
-      <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
-        <h1>Тема интерфейса</h1>
-        <div style="display: flex; align-items: center;">
-          <label class="switch" style="margin-bottom: 10px;">
-            <input type="checkbox" id="toggle-theme">
-            <span class="slider"></span>
-          </label>
-          <h2 style="margin-left: 10px;">Светлая/Темная</h2>
+        <button id="Enhilaboutbtn" class="menubtnbtn">О Enhil</button>
+        <button id="aboutbtn" class="menubtnbtn">О нас</button>
+        <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
+      </menu>
+      <div id="theme" class="any">
+        <h1 class="center">Оформление</h1>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
+          <h1>Тема интерфейса</h1>
+          <div style="display: flex; align-items: center;">
+            <label class="switch" style="margin-bottom: 10px;">
+              <input type="checkbox" id="toggle-theme">
+              <span class="slider"></span>
+            </label>
+            <h2 style="margin-left: 10px;">Светлая/Темная</h2>
+          </div>
+          </div>
         </div>
-
-        <div style="display: flex; align-items: center;">
-          <label class="switch" style="margin-bottom: 10px;">
-            <input type="checkbox" id="toggle-theme-text">
-            <span class="slider"></span>
-          </label>
-          <h2 style="margin-left: 10px;">Светлая/Темная</h2>
-        </div>
-      </div>
-    </div>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="cookie.js"></script>
   <script>
@@ -249,22 +241,7 @@
     
 
 
-    const togglethemetext = document.getElementById("toggle-theme-text");
     const toggletheme = document.getElementById("toggle-theme");
-
-
-    // Проверка сохраненного состояния
-    window.onload = function () {
-      const themetext = getCookie('themetext');
-      if (themetext === 'dark') {
-        document.body.classList.add('dark-theme');
-        darkmode();
-        togglethemetext.checked = true;
-      } else {
-        document.body.classList.add('white-theme');
-        whitemode();
-      }
-    };
 
 
     // Проверка сохраненного состояния
@@ -272,6 +249,7 @@
       const theme = getCookie('theme');
       if (theme === 'dark') {
         document.body.classList.add('dark-theme');
+        darkmode();
         toggletheme.checked = true;
       } else {
         document.body.classList.add('white-theme');
