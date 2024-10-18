@@ -3,47 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web App Example</title>
+    <title>Hybrid Encryption</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 50px;
         }
-        #user-info {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            padding: 10px;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <h1>Telegram Web App Example</h1>
-    <div id="user-info">
-        <p>Loading user information...</p>
-    </div>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <h1>Hybrid Encryption (AES + RSA)</h1>
+
+    <h3>Text to encrypt</h3>
+    <textarea id="plaintext" placeholder="Enter text..."></textarea>
+    <button onclick="encryptData()">Encrypt</button>
+
+    <h3>Encrypted Data</h3>
+    <textarea id="encryptedData" readonly></textarea>
+
+    <h3>Decrypted Data</h3>
+    <textarea id="decryptedData" readonly></textarea>
+    <button onclick="decryptData()">Decrypt</button>
+
     <script>
-        let tg = window.Telegram.WebApp;
+        let rsaKeyPair;
+        let aesKey;
+        let encryptedAESKey;
+        let encryptedText;
+        let iv;
 
-        tg.ready();
-
-        // Получение информации о пользователе
-        const user = tg.initDataUnsafe.user;
-        const userInfoDiv = document.getElementById('user-info');
-        
-        if (user) {
-            userInfoDiv.innerHTML = `
-                <p><strong>User ID:</strong> ${user.id}</p>
-                <p><strong>First Name:</strong> ${user.first_name}</p>
-                <p><strong>Last Name:</strong> ${user.last_name || ''}</p>
-                <p><strong>Username:</strong> ${user.username || ''}</p>
-            `;
-        } else {
-            userInfoDiv.innerHTML = `<p>No user information available.</p>`;
+        // Генерация RSA ключей
+        async function generateRSAKeys() {
+            rsaKeyPair = await crypto.subtle.generateKey(
+                {
+                    name: "RSA-OAEP",
+                    modulusLength: 2048,
+                    publicExponent: new Uint8Array([1, 0, 1]),
+                    hash: "SHA-256",
+                },
+                true,
+                ["encrypt", "decrypt"]
+            );
         }
+
+        // Шифрование данных (AES + RSA)
+        async function encryptData() {
+            const plaintext = document.getElementById('plaintext').value;
+
+            if (!plaintext) {
+                alert('Please enter some text.');
+                return;
+            }
+
+            // Генерация AES ключа
+            aesKey = await crypto.subtle.generateKey(
+                {
+                    name: "AES-GCM",
+                    length: 256,
+                },
+                true,
+                ["encrypt", "decrypt"]
+            );
+
+            // Шифрование текста с помощью AES
+            iv = crypto.getRandomValues(new Uint8Array(12));
+            const encodedText = new TextEncoder().encode(plaintext);
+            encryptedText = await crypto.subtle.encrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv,
+                },
+                aesKey,
+                encodedText
+            );
+
+            // Шифрование AES ключа с помощью RSA (публичный ключ)
+            encryptedAESKey = await crypto.subtle.encrypt(
+                {
+                    name: "RSA-OAEP",
+                },
+                rsaKeyPair.publicKey,
+                await crypto.subtle.exportKey('raw', aesKey)
+            );
+
+            document.getElementById('encryptedData').value = btoa(String.fromCharCode(...new Uint8Array(encryptedText))) + '\n\nAES Key (RSA Encrypted): ' + btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)));
+        }
+
+        // Дешифрование данных
+        async function decryptData() {
+            if (!encryptedText || !encryptedAESKey) {
+                alert('Please encrypt data first.');
+                return;
+            }
+
+            // Дешифрование AES ключа с помощью RSA (приватный ключ)
+            const decryptedAESKey = await crypto.subtle.decrypt(
+                {
+                    name: "RSA-OAEP",
+                },
+                rsaKeyPair.privateKey,
+                encryptedAESKey
+            );
+
+            const aesKeyObj = await crypto.subtle.importKey(
+                "raw",
+                decryptedAESKey,
+                {
+                    name: "AES-GCM",
+                },
+                true,
+                ["decrypt"]
+            );
+
+            // Дешифрование текста с помощью AES
+            const decryptedText = await crypto.subtle.decrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv,
+                },
+                aesKeyObj,
+                encryptedText
+            );
+
+            document.getElementById('decryptedData').value = new TextDecoder().decode(decryptedText);
+        }
+
+        // Генерация RSA ключей при загрузке страницы
+        window.onload = generateRSAKeys;
     </script>
 </body>
 </html>
