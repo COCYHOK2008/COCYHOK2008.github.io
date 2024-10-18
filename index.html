@@ -11,6 +11,7 @@
     :root {
       --color-text: #ffffff;
       --color-btn: #eeeeee;
+      --rules: block;
     }
     
     * {
@@ -37,8 +38,8 @@
       display: none;
     }
 
-    #rules {
-      display: block;
+    .rules {
+      display: var(--rules);
     }
 
     .any {
@@ -183,14 +184,14 @@
     const user = tg.initDataUnsafe.user;
     if (user) {
       if (["1802735160"].includes(String(user.id))) {
-        document.body.style.display = "none";
+        document.documentElement.style.setProperty("--rules", "none");
         document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
       }
     }
   </script>
 </head>
 <body class="light-theme">
-  <rules>
+  <div class="rules">
     <button id="menubtn" class="menubtn"></button>
     <div id="main" class="center">
         <h1>Главное</h1>
@@ -314,6 +315,6 @@
     
 
   </script>
-  </rules>
+  </div>
 </body>
 </html>
