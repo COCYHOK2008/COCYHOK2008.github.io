@@ -179,24 +179,23 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="back.js"></script>
   <script>
-    let is_rule = true;
     let tg = window.Telegram.WebApp;
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
       if (![1802735160].includes(user.id)) {
-
+        let is_rule = true;
       }
       else {
         document.documentElement.style.setProperty("--rules", "none");
         document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
-        is_rule = false;
+        let is_rule = false;
       }
     }
     else {
       document.documentElement.style.setProperty("--rules", "none");
       document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
-      is_rule = false;
+      let is_rule = false;
     }
   </script>
 </head>
