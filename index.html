@@ -184,7 +184,7 @@
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
-      if ([1802735160].includes(user.id)) {
+      if (![1802735160].includes(user.id)) {
         document.documentElement.style.setProperty("--rules", "none");
         document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
         is_rule = true;
