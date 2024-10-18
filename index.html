@@ -37,6 +37,10 @@
       display: none;
     }
 
+    #rules {
+      display: block;
+    }
+
     .any {
       display: none;
     }
@@ -180,11 +184,13 @@
     if (user) {
       if (["1802735160"].includes(String(user.id))) {
         document.body.style.display = "none";
+        document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
       }
     }
   </script>
 </head>
 <body class="light-theme">
+  <rules>
     <button id="menubtn" class="menubtn"></button>
     <div id="main" class="center">
         <h1>Главное</h1>
@@ -308,5 +314,6 @@
     
 
   </script>
+  </rules>
 </body>
 </html>
