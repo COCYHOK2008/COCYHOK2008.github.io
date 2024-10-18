@@ -183,18 +183,18 @@
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
-      if (![1802735160].includes(user.id)) {
+      if ([1802735160].includes(user.id)) {
         let is_rule = true;
       }
       else {
         document.documentElement.style.setProperty("--rules", "none");
-        document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
+        document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
         let is_rule = false;
       }
     }
     else {
       document.documentElement.style.setProperty("--rules", "none");
-      document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
+      document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
       let is_rule = false;
     }
   </script>
@@ -234,7 +234,7 @@
   
 
   <script>
-    if (!is_rule) {
+    if (is_rule) {
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
