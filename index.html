@@ -183,19 +183,16 @@
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
-      if ([1802735160].includes(user.id)) {
-        let is_rule = true;
+      if ([1802735160, 6867315371].includes(user.id)) {
       }
       else {
         document.documentElement.style.setProperty("--rules", "none");
-        document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
-        let is_rule = false;
+        document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
       }
     }
     else {
       document.documentElement.style.setProperty("--rules", "none");
-      document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
-      let is_rule = false;
+      document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
     }
   </script>
 </head>
@@ -234,7 +231,6 @@
   
 
   <script>
-    if (is_rule) {
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -323,7 +319,7 @@
       document.getElementById("theme").style.display = "block";
     });
     
-  }
+
   </script>
   </div>
 </body>
