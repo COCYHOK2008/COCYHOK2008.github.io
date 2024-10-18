@@ -179,13 +179,15 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="back.js"></script>
   <script>
+    let is_rule = false;
     let tg = window.Telegram.WebApp;
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
-      if (["1802735160"].includes(String(user.id))) {
+      if ([1802735160].includes(user.id)) {
         document.documentElement.style.setProperty("--rules", "none");
         document.body.innerHTML = "<p>Извините, мы не зарегестрированный пользователь</p>";
+        is_rule = true;
       }
     }
   </script>
@@ -225,6 +227,7 @@
   
 
   <script>
+    if (is_rule) {
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -313,7 +316,7 @@
       document.getElementById("theme").style.display = "block";
     });
     
-
+  }
   </script>
   </div>
 </body>
