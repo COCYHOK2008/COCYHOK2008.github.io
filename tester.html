@@ -183,23 +183,16 @@
     tg.ready();
     const user = tg.initDataUnsafe.user;
     if (user) {
-      alert(0);
       if ([1802735160].includes(user.id)) {
-        alert(3);
-        let is_rule = true;
       }
       else {
-        alert(2);
         document.documentElement.style.setProperty("--rules", "none");
         document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
-        let is_rule = false;
       }
     }
     else {
-      alert(1);
       document.documentElement.style.setProperty("--rules", "none");
       document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
-      let is_rule = false;
     }
   </script>
 </head>
@@ -238,7 +231,6 @@
   
 
   <script>
-    if (is_rule) {
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -327,7 +319,7 @@
       document.getElementById("theme").style.display = "block";
     });
     
-  }
+
   </script>
   </div>
 </body>
