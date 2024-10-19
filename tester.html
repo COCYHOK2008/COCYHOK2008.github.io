@@ -237,10 +237,8 @@
     let tg = window.Telegram.WebApp;
     tg.ready();
     const user = tg.initDataUnsafe.user;
-    if (user) {
-      if ([1802735160, 5179202663].includes(user.id)) {
-    
-        
+
+
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -333,22 +331,6 @@
     
     
 
-      } else {
-        document.getElementById("menubtn").style.display = "none";
-        const logo = document.getElementById("logo");
-        logo.src = "krest.png";
-        logo.style.borderRadius = "0";
-        document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
-      }
-
-
-    } else {
-      document.getElementById("menubtn").style.display = "none";
-      const logo = document.getElementById("logo");
-      logo.src = "krest.png";
-      logo.style.borderRadius = "0";
-      document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
-    }
 
   </script>
 </body>
