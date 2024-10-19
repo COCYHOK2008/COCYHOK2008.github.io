@@ -197,13 +197,13 @@
   </script>
 </head>
 <body class="light-theme">
-  <div class="rules">
     <button id="menubtn" class="menubtn"></button>
     <div id="main" class="center">
         <h1>Главное</h1>
-        <div><img style="border-radius: 100%;" src="logo.jpeg"></div>
-        <p>Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
+        <div><img id="logo" style="border-radius: 100%;" src="logo.jpeg"></div>
+        <p id="re">Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
 
+  <div class="rules">
     </div>
       <menu id="menu">
         <button id="mainbtn" class="menubtnbtn">Главное</button>
@@ -320,6 +320,11 @@
       document.getElementById("theme").style.display = "block";
     });
     
+  } else {
+    const logo = document.getElementById("logo");
+    logo.style.borderRadius = "0";
+    logo.src = "krest.png";
+    document.getElementById("re").innerText = "Извините, вы не зарегестрированный пользователь. Error 401: нет прав доступа. Отказ в обслуживании";
   }
   </script>
   </div>
