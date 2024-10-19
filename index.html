@@ -11,7 +11,6 @@
     :root {
       --color-text: #ffffff;
       --color-btn: #eeeeee;
-      --rules: block;
     }
     
     * {
@@ -36,10 +35,6 @@
       padding: 20px;
       text-align: center;
       display: none;
-    }
-
-    .rules {
-      display: var(--rules);
     }
 
     .any {
@@ -176,35 +171,16 @@
 
 
   </style>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="back.js"></script>
-  <script>
-    let is_rule = false;
-    let tg = window.Telegram.WebApp;
-    tg.ready();
-    const user = tg.initDataUnsafe.user;
-    if (user) {
-      if ([1802735160, 5179202663].includes(user.id)) {
-        is_rule = true;
-      }
-      else {
-        document.documentElement.style.setProperty("--rules", "none");
-        document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
-      }
-    }
-    else {
-      document.documentElement.style.setProperty("--rules", "none");
-      document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
-    }
-  </script>
+
+
 </head>
 <body class="light-theme">
-  <div class="rules">
     <button id="menubtn" class="menubtn"></button>
     <div id="main" class="center">
         <h1>Главное</h1>
-        <div><img style="border-radius: 100%;" src="logo.jpeg"></div>
-        <p>Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
+        <div><img id="logo" style="border-radius: 100%;" src="logo.jpeg"></div>
+        <p id="rulessss">Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
+
 
     </div>
       <menu id="menu">
@@ -231,9 +207,16 @@
           </div>
         </div>
   
-
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="back.js"></script>
   <script>
-    if (is_rule) {
+    let is_rule = false;
+    let tg = window.Telegram.WebApp;
+    tg.ready();
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+      if ([1802735160, 5179202663].includes(user.id)) {
+        
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -322,8 +305,20 @@
       document.getElementById("theme").style.display = "block";
     });
     
-  }
+
+      }
+      else {
+        document.documentElement.style.setProperty("--rules", "none");
+        document.getElementById("logo").src = "krest.png";
+        document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+      }
+    }
+    else {
+      document.getElementById("menubtn").style.display = "none";
+      document.getElementById("logo").src = "krest.png";
+      document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+    }
+
   </script>
-  </div>
 </body>
 </html>
