@@ -308,7 +308,9 @@
       }
       else {
         document.getElementById("menubtn").style.display = "none";
-        document.getElementById("logo").src = "krest.png";
+        const logo = document.getElementById("logo")
+        logo.src = "krest.png";
+        logo.style.borderRadius = "0";
         document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
       }
     }
