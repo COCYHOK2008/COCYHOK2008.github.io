@@ -1,148 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Encryption</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
-        button {
-            padding: 10px;
-            margin: 10px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Shoop</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Montserrat:200,500&display=swap");
+
+    :root {
+      --color-text: #ffffff;
+      --color-btn: #eeeeee;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 200;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .target {
+      width: 100%;
+      padding: 20px;
+    }
+
+    #menu {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    .any {
+      display: none;
+    }
+
+    h1 {
+      margin-top: 50px;
+      margin-bottom: 10px;
+    }
+    img {
+      width: 70px;
+      margin: 30px auto;
+    }
+    p {
+      width: 350px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+    a {
+      width: 350px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+    .center {
+      text-align: center;
+    }
+
+    input {
+      width: 90%;
+      outline: none;
+      margin: 10px 5%;
+      padding: 15px 10px;
+      font-size: 10px;
+      border: 2px solid silver;
+      border-radius: 5px;
+    }
+    input:focus {
+      border-color: #6e6e6e;
+    }
+    
+    .menubtn {
+      border-radius: 5px;
+      background-color: var(--color-btn);
+      color: var(--color-text);
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('menu.png');
+      background-size: cover;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+      position: relative;
+      top: 7px;
+      transition: 0.5s;
+    }
+
+    .menubtnbtn {
+        background-color: var(--color-btn);
+        color: var(--color-text);
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 10px;
+        border-radius: 0;
+        margin-top: 10px;
+    }
+
+    .light-theme {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    .dark-theme {
+        background-color: #000000;
+        color: #ffffff;
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+    
+    .tonkoin {
+
+      margin-left: 10px;
+    }
+
+
+  </style>
+
+
 </head>
-<body>
-    <h1>Hybrid Encryption (AES + RSA)</h1>
+<body class="light-theme">
 
-    <h3>Text to encrypt</h3>
-    <textarea id="plaintext" placeholder="Enter text..."></textarea>
-    <button onclick="encryptData()">Encrypt</button>
 
-    <h3>Encrypted Data</h3>
-    <textarea id="encryptedData" readonly></textarea>
+    <button id="menubtn" class="menubtn"></button>
 
-    <h3>Decrypted Data</h3>
-    <textarea id="decryptedData" readonly></textarea>
-    <button onclick="decryptData()">Decrypt</button>
 
-    <script>
-        let rsaKeyPair;      // Переменная для хранения пары RSA-ключей
-        let aesKey;          // Переменная для AES-ключа, который будет использован для шифрования текста
-        let encryptedAESKey; // Переменная для хранения зашифрованного AES-ключа
-        let encryptedText;   // Переменная для хранения зашифрованного текста
-        let iv;              // Вектор инициализации (IV) для алгоритма AES-GCM
+    <div id="main" class="center">
+        <h1>Главное</h1>
+        <img id="logo" style="border-radius: 100%;" src="logo.jpeg">
+        <p id="rulessss">Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
+    </div>
 
-        // Функция для генерации пары RSA-ключей
-        async function generateRSAKeys() {
-            rsaKeyPair = await crypto.subtle.generateKey(
-                {
-                    name: "RSA-OAEP",                 // Используем алгоритм RSA с OAEP-паддингом
-                    modulusLength: 2048,              // Длина ключа 2048 бит
-                    publicExponent: new Uint8Array([1, 0, 1]), // Открытая экспонента для RSA
-                    hash: "SHA-256",                  // Хэширование с использованием SHA-256
-                },
-                true,                                 // Делаем ключи экспортируемыми (можно использовать снаружи)
-                ["encrypt", "decrypt"]                // Открытый ключ для шифрования, закрытый для расшифровки
-            );
+
+
+      <menu id="menu">
+        <button id="mainbtn" class="menubtnbtn">Главное</button>
+        <button id="themebtn" class="menubtnbtn">Оформление</button>
+        <button id="codingtextbtn" class="menubtnbtn">Шифрование текста</button>
+        <button id="decodingtextbtn" class="menubtnbtn">Расшифрование текста</button>
+
+
+
+        <button id="Enhilaboutbtn" class="menubtnbtn">О Enhil</button>
+        <button id="aboutbtn" class="menubtnbtn">О нас</button>
+        <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
+      </menu>
+
+      <div id="codingtext" class="any">
+        <h1 class="center">Шифровка</h1>
+        <p>Текст для шифрования</p>
+        <input id="textneedtobecoding" placeholder="Введите текст">
+
+        <p>Зашифрованный текст</p>
+        <input id="textwhobecoding" placeholder="Здесь будет зашифрованное сообщение" readonly>
+        <p>Ключ для расшифрования сообщения</p>
+        <input id="keysfortextwhobecoding" placeholder="Ключи для расшифровки текста" readonly>
+
+
+
+
+      </div>
+
+
+      <div id="theme" class="any">
+        <h1 class="center">Оформление</h1>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
+          <h1>Тема интерфейса</h1>
+          <div style="display: flex; align-items: center;">
+            <label class="switch" style="margin-bottom: 10px;">
+              <input type="checkbox" id="toggle-theme">
+              <span class="slider"></span>
+            </label>
+            <h2 style="margin-left: 10px;">Светлая/Темная</h2>
+          </div>
+          </div>
+        </div>
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="back.js"></script>
+  <script>
+    let tg = window.Telegram.WebApp;
+    tg.ready();
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+      if ([1802735160, 5179202663].includes(user.id)) {
+    
+        
+    let main = document.getElementById("main");
+    let themebtn = document.getElementById("themebtn");
+    let mainbtn = document.getElementById("mainbtn");
+    let menubtn = document.getElementById("menubtn");
+    let theme = document.getElementById("theme");
+    let menu = document.getElementById("menu");
+    let codingtext = document.getElementById("smes");
+    tg.expand();
+
+
+
+    function closeall() {
+      main.style.display = "none";
+      theme.style.display = "none";
+      menu.style.display = "none";
+      codingtext.style.display = "none";
+    }
+
+
+
+
+    
+
+
+    const toggletheme = document.getElementById("toggle-theme");
+
+
+    // Проверка сохраненного состояния
+    window.onload = function () {
+      const theme = getCookie('theme');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        darkmode();
+        toggletheme.checked = true;
+      } else {
+        document.body.classList.add('white-theme');
+        whitemode();
+      }
+    };
+
+    toggletheme.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+            darkmode();
+            setCookie('theme', 'dark', 365);
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+            whitemode();
+            setCookie('theme', 'light', 365);
         }
+    });
 
-        // Функция для шифрования данных (гибридное шифрование: AES для данных, RSA для ключа AES)
-        async function encryptData() {
-            const plaintext = document.getElementById('plaintext').value; // Получаем текст из поля для ввода
 
-            if (!plaintext) {                      // Если текст пустой, выводим предупреждение
-                alert('Please enter some text.');
-                return;
-            }
 
-            // Генерация AES-ключа для симметричного шифрования
-            aesKey = await crypto.subtle.generateKey(
-                {
-                    name: "AES-GCM",               // Алгоритм AES в режиме GCM (с аутентификацией)
-                    length: 256,                   // Длина ключа 256 бит
-                },
-                true,                              // Делаем ключ экспортируемым
-                ["encrypt", "decrypt"]             // Ключ можно использовать для шифрования и расшифровки
-            );
 
-            // Генерация случайного вектора инициализации (IV) для AES
-            iv = crypto.getRandomValues(new Uint8Array(12));  // 12 байт для IV (рекомендуется для AES-GCM)
-            const encodedText = new TextEncoder().encode(plaintext); // Кодируем текст в формат Uint8Array
 
-            // Шифруем текст с использованием AES-GCM
-            encryptedText = await crypto.subtle.encrypt(
-                {
-                    name: "AES-GCM",              // Используем AES-GCM для шифрования
-                    iv: iv,                       // Передаем сгенерированный IV
-                },
-                aesKey,                            // Используем сгенерированный AES-ключ
-                encodedText                        // Текст для шифрования (закодирован как Uint8Array)
-            );
 
-            // Шифруем AES-ключ с помощью RSA (открытый ключ)
-            encryptedAESKey = await crypto.subtle.encrypt(
-                {
-                    name: "RSA-OAEP",              // Алгоритм RSA-OAEP для шифрования ключа AES
-                },
-                rsaKeyPair.publicKey,              // Используем открытый ключ RSA для шифрования
-                await crypto.subtle.exportKey('raw', aesKey) // Экспортируем AES-ключ в "сыром" формате
-            );
 
-            // Отображаем зашифрованный текст и зашифрованный AES-ключ в поле вывода
-            document.getElementById('encryptedData').value = btoa(String.fromCharCode(...new Uint8Array(encryptedText))) + '\n\nAES Key (RSA Encrypted): ' + btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)));
-        }
+    document.getElementById("aboutbtn").addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
+      window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");
+    });
 
-        // Функция для дешифрования данных
-        async function decryptData() {
-            if (!encryptedText || !encryptedAESKey) { // Проверяем, есть ли данные для расшифровки
-                alert('Please encrypt data first.');
-                return;
-            }
+    document.getElementById("Enhilaboutbtn").addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
+      window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");
+    });
 
-            // Дешифруем AES-ключ с использованием RSA (закрытый ключ)
-            const decryptedAESKey = await crypto.subtle.decrypt(
-                {
-                    name: "RSA-OAEP",              // Алгоритм RSA-OAEP для расшифровки
-                },
-                rsaKeyPair.privateKey,             // Используем закрытый ключ RSA для расшифровки
-                encryptedAESKey                    // Передаем зашифрованный AES-ключ
-            );
 
-            // Импортируем дешифрованный AES-ключ
-            const aesKeyObj = await crypto.subtle.importKey(
-                "raw",                              // Формат ключа — "сырой" (raw)
-                decryptedAESKey,                    // Дешифрованный AES-ключ
-                {
-                    name: "AES-GCM",               // Указываем алгоритм AES-GCM
-                },
-                true,                              // Делаем ключ снова экспортируемым
-                ["decrypt"]                        // Будем использовать ключ для расшифровки
-            );
+    menubtn.addEventListener("click", () => {
+        closeall();
+        document.getElementById("menu").style.display = "block";
+    });
 
-            // Дешифруем текст с использованием AES-GCM
-            const decryptedText = await crypto.subtle.decrypt(
-                {
-                    name: "AES-GCM",              // Алгоритм AES-GCM для расшифровки
-                    iv: iv,                       // Передаем тот же IV, что использовался при шифровании
-                },
-                aesKeyObj,                         // Используем восстановленный AES-ключ
-                encryptedText                      // Зашифрованный текст для расшифровки
-            );
+    mainbtn.addEventListener("click", () => {
+      closeall();
+      main.style.display = "block";
 
-            // Отображаем расшифрованный текст в поле вывода
-            document.getElementById('decryptedData').value = new TextDecoder().decode(decryptedText); // Декодируем Uint8Array обратно в строку
-        }
+    });
 
-        // Генерация RSA-ключей при загрузке страницы
-        window.onload = generateRSAKeys;  // При загрузке страницы сразу генерируем RSA-ключи
-    </script>
+    themebtn.addEventListener("click", () => {
+      closeall();
+      document.getElementById("theme").style.display = "block";
+    });
+
+    
+    
+
+      } else {
+        document.getElementById("menubtn").style.display = "none";
+        const logo = document.getElementById("logo");
+        logo.src = "krest.png";
+        logo.style.borderRadius = "0";
+        document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+      }
+
+
+    } else {
+      document.getElementById("menubtn").style.display = "none";
+      const logo = document.getElementById("logo");
+      logo.src = "krest.png";
+      logo.style.borderRadius = "0";
+      document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+    }
+
+  </script>
 </body>
 </html>
