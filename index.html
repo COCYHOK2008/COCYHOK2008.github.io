@@ -189,12 +189,10 @@
       }
       else {
         document.documentElement.style.setProperty("--rules", "none");
-        document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
       }
     }
     else {
       document.documentElement.style.setProperty("--rules", "none");
-      document.body.innerHTML = "<p>Sorry, you are not a registered user</p>";
     }
   </script>
 </head>
@@ -228,12 +226,13 @@
             </label>
             <h2 style="margin-left: 10px;">Светлая/Темная</h2>
           </div>
-          </div>
         </div>
+      </div>
   
 
   <script>
     if (is_rule) {
+    document.getElementById("rulesas").style.display = "block";
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -322,6 +321,9 @@
       document.getElementById("theme").style.display = "block";
     });
     
+  }
+  else {
+    document.body.innerHTML = "<p>Извините, вы не зарегестрированный пользователь</p>";
   }
   </script>
   </div>
