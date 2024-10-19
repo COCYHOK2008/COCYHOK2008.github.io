@@ -176,25 +176,8 @@
 
 
   </style>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="back.js"></script>
-  <script>
-    let is_rule = false;
-    let tg = window.Telegram.WebApp;
-    tg.ready();
-    const user = tg.initDataUnsafe.user;
-    if (user) {
-      if ([1802735160, 5179202663].includes(user.id)) {
-        is_rule = true;
-      }
-      else {
-        document.documentElement.style.setProperty("--rules", "none");
-      }
-    }
-    else {
-      document.documentElement.style.setProperty("--rules", "none");
-    }
-  </script>
+
+
 </head>
 <body class="light-theme">
     <button id="menubtn" class="menubtn"></button>
@@ -229,9 +212,16 @@
           </div>
         </div>
   
-
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="back.js"></script>
   <script>
-    if (is_rule) {
+    let is_rule = false;
+    let tg = window.Telegram.WebApp;
+    tg.ready();
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+      if ([1802735160, 5179202663].includes(user.id)) {
+        
     let main = document.getElementById("main");
     let themebtn = document.getElementById("themebtn");
     let mainbtn = document.getElementById("mainbtn");
@@ -320,11 +310,20 @@
       document.getElementById("theme").style.display = "block";
     });
     
-  }
-  if (!is_rule) {
-    document.getElementById("logo").src = "krest.png";
-    document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
-  }
+
+      }
+      else {
+        document.documentElement.style.setProperty("--rules", "none");
+        document.getElementById("logo").src = "krest.png";
+        document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+      }
+    }
+    else {
+      document.documentElement.style.setProperty("--rules", "none");
+      document.getElementById("logo").src = "krest.png";
+      document.getElementById("rulessss").innerText = "Доступ запрещен! Error 401: Вы не зарегестрированный пользователь";
+    }
+
   </script>
   </div>
 </body>
