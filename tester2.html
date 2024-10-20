@@ -3,109 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebRTC Chat</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 50px; }
-        input, button { margin: 10px 0; padding: 10px; font-size: 16px; }
-        #messages { margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto; }
-        #messages p { margin: 5px 0; }
-    </style>
+    <title>Fixed RSA Key Encryption</title>
 </head>
 <body>
-    <h2>WebRTC Chat</h2>
-    <div>
-        <button id="startBtn">Start Connection</button>
-        <button id="connectBtn" disabled>Connect</button>
-    </div>
-    <div>
-        <input type="text" id="messageInput" placeholder="Enter message" disabled>
-        <button id="sendBtn" disabled>Send Message</button>
-    </div>
-    <div id="messages"></div>
+    <h1>Encrypt/Decrypt with Fixed RSA Keys</h1>
+
+    <textarea id="plaintext" placeholder="Enter text to encrypt"></textarea>
+    <button onclick="encryptText()">Encrypt</button>
+
+    <h3>Encrypted Data</h3>
+    <textarea id="encryptedData" readonly></textarea>
+
+    <h3>Decrypted Data</h3>
+    <textarea id="decryptedData" readonly></textarea>
+    <button onclick="decryptText()">Decrypt</button>
 
     <script>
-        let localConnection;
-        let remoteConnection;
-        let sendChannel;
-        let receiveChannel;
+        // Зашитые публичный и приватный RSA ключи (в формате Base64)
+        const publicKeyBase64 = 'MIIBIjANBgkq...';  // Заменить на сгенерированный публичный ключ
+        const privateKeyBase64 = 'MIIEvgIBADAN...';  // Заменить на сгенерированный приватный ключ
 
-        const startBtn = document.getElementById("startBtn");
-        const connectBtn = document.getElementById("connectBtn");
-        const sendBtn = document.getElementById("sendBtn");
-        const messageInput = document.getElementById("messageInput");
-        const messagesDiv = document.getElementById("messages");
+        let aesKey; // Сгенерированный AES ключ
+        let encryptedAESKey; // Зашифрованный AES ключ
+        let encryptedText; // Зашифрованный текст
+        let iv; // Вектор инициализации
 
-        startBtn.onclick = () => {
-            startConnection();
-            connectBtn.disabled = false;
-        };
+        // Функция для импорта ключей из Base64
+        async function importRSAKey(base64, isPublic) {
+            const binaryDerString = window.atob(base64); // Декодируем из Base64
+            const binaryDer = new Uint8Array(binaryDerString.length);
+            for (let i = 0; i < binaryDerString.length; i++) {
+                binaryDer[i] = binaryDerString.charCodeAt(i);
+            }
+            return crypto.subtle.importKey(
+                'spki', // Для публичного ключа (меняется на 'pkcs8' для приватного)
+                binaryDer.buffer,
+                {
+                    name: 'RSA-OAEP',
+                    hash: {name: 'SHA-256'}
+                },
+                true,
+                isPublic ? ['encrypt'] : ['decrypt'] // Указываем, для чего используется ключ
+            );
+        }
 
-        connectBtn.onclick = () => {
-            createAnswer();
-        };
+        // Импорт RSA ключей при загрузке
+        let publicKey, privateKey;
+        async function loadRSAKeys() {
+            publicKey = await importRSAKey(publicKeyBase64, true);
+            privateKey = await importRSAKey(privateKeyBase64, false);
+        }
 
-        sendBtn.onclick = () => {
-            const message = messageInput.value;
-            sendChannel.send(message);
-            addMessage(`You: ${message}`);
-            messageInput.value = '';
-        };
+        // Функция для шифрования текста
+        async function encryptText() {
+            const plaintext = document.getElementById('plaintext').value;
+            if (!plaintext) {
+                alert('Please enter some text.');
+                return;
+            }
 
-        function startConnection() {
-            localConnection = new RTCPeerConnection();
-            sendChannel = localConnection.createDataChannel("sendChannel");
+            // Генерация AES ключа
+            aesKey = await crypto.subtle.generateKey(
+                {
+                    name: 'AES-GCM',
+                    length: 256,
+                },
+                true,
+                ['encrypt', 'decrypt']
+            );
+
+            // Шифрование текста с помощью AES
+            iv = crypto.getRandomValues(new Uint8Array(12)); // Вектор инициализации
+            const encodedText = new TextEncoder().encode(plaintext);
+            encryptedText = await crypto.subtle.encrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv,
+                },
+                aesKey,
+                encodedText
+            );
+
+            // Шифрование AES ключа с помощью RSA
+            const exportedAESKey = await crypto.subtle.exportKey('raw', aesKey);
+            encryptedAESKey = await crypto.subtle.encrypt(
+                {
+                    name: 'RSA-OAEP',
+                },
+                publicKey, // Используем зафиксированный публичный ключ
+                exportedAESKey
+            );
+
+            // Вывод зашифрованного текста и AES ключа
+            document.getElementById('encryptedData').value = `Encrypted Text: ${btoa(String.fromCharCode(...new Uint8Array(encryptedText)))}
             
-            sendChannel.onopen = () => {
-                messageInput.disabled = false;
-                sendBtn.disabled = false;
-            };
-            
-            localConnection.onicecandidate = e => {
-                if (e.candidate) {
-                    remoteConnection.addIceCandidate(e.candidate);
-                }
-            };
-
-            localConnection.createOffer().then(offer => {
-                localConnection.setLocalDescription(offer);
-            });
-
-            remoteConnection = new RTCPeerConnection();
-            remoteConnection.ondatachannel = event => {
-                receiveChannel = event.channel;
-                receiveChannel.onmessage = event => addMessage(`Friend: ${event.data}`);
-            };
-
-            remoteConnection.onicecandidate = e => {
-                if (e.candidate) {
-                    localConnection.addIceCandidate(e.candidate);
-                }
-            };
-
-            localConnection.onnegotiationneeded = () => {
-                localConnection.createOffer().then(offer => {
-                    localConnection.setLocalDescription(offer);
-                    remoteConnection.setRemoteDescription(offer);
-                    remoteConnection.createAnswer().then(answer => {
-                        remoteConnection.setLocalDescription(answer);
-                        localConnection.setRemoteDescription(answer);
-                    });
-                });
-            };
+Encrypted AES Key (RSA encrypted): ${btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)))}`;
         }
 
-        function createAnswer() {
-            remoteConnection.createAnswer().then(answer => {
-                remoteConnection.setLocalDescription(answer);
-                localConnection.setRemoteDescription(answer);
-            });
+        // Функция для расшифровки текста
+        async function decryptText() {
+            if (!encryptedText || !encryptedAESKey) {
+                alert('Please encrypt data first.');
+                return;
+            }
+
+            // Дешифрование AES ключа с помощью RSA приватного ключа
+            const decryptedAESKey = await crypto.subtle.decrypt(
+                {
+                    name: 'RSA-OAEP',
+                },
+                privateKey, // Используем зафиксированный приватный ключ
+                encryptedAESKey
+            );
+
+            // Восстановление AES ключа
+            const importedAESKey = await crypto.subtle.importKey(
+                'raw',
+                decryptedAESKey,
+                {
+                    name: 'AES-GCM',
+                },
+                true,
+                ['decrypt']
+            );
+
+            // Дешифрование текста с помощью AES
+            const decryptedText = await crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv,
+                },
+                importedAESKey,
+                encryptedText
+            );
+
+            // Вывод расшифрованного текста
+            document.getElementById('decryptedData').value = new TextDecoder().decode(decryptedText);
         }
 
-        function addMessage(message) {
-            const p = document.createElement("p");
-            p.textContent = message;
-            messagesDiv.appendChild(p);
-        }
+        // Загружаем зафиксированные RSA ключи при загрузке страницы
+        window.onload = loadRSAKeys;
     </script>
 </body>
 </html>
