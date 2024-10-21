@@ -22,8 +22,12 @@
             background-color: #202123;
             color: white;
             padding: 20px;
-            transition: 0.3s;
-            overflow-x: hidden;
+            transition: transform 0.3s ease;
+            transform: translateX(0); /* По умолчанию меню открыто */
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-100%); /* Скрываем меню */
         }
 
         .sidebar a {
@@ -45,33 +49,29 @@
             transition: margin-left 0.3s;
         }
 
+        .main-content.expanded {
+            margin-left: 0; /* Когда меню скрыто, контент двигается влево */
+        }
+
         /* Кнопка для скрытия меню */
         .menu-toggle {
             position: absolute;
             top: 20px;
-            right: -50px;
+            left: 20px;
             background-color: #202123;
             color: white;
             border: none;
             padding: 10px;
             cursor: pointer;
             border-radius: 5px;
-        }
-
-        /* Когда меню скрыто */
-        .sidebar.hidden {
-            width: 0;
-            padding: 0;
-        }
-
-        .main-content.hidden {
-            margin-left: 0;
+            z-index: 100; /* Чтобы кнопка была всегда на виду */
         }
     </style>
 </head>
 <body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
     <div class="sidebar" id="sidebar">
-        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         <a href="#">Home</a>
         <a href="#">Profile</a>
         <a href="#">Settings</a>
@@ -88,7 +88,7 @@
             const sidebar = document.getElementById("sidebar");
             const mainContent = document.getElementById("main-content");
             sidebar.classList.toggle("hidden");
-            mainContent.classList.toggle("hidden");
+            mainContent.classList.toggle("expanded");
         }
     </script>
 </body>
