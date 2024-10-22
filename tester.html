@@ -237,7 +237,7 @@
 
     let tg = window.Telegram.WebApp;
     tg.ready();
-    const userid = tg.initDataUnsage.user.id;
+    let userid = tg.initDataUnsafe.user.id;
     if (!userid) {userid = 1802735160}
     if ([1802735160].includes(userid)) {
   
