@@ -188,7 +188,7 @@
 
 
 
-      <menu id="menu">
+    <menu id="menu">
         <button id="mainbtn" class="menubtnbtn" onclick="closeall(document.getElementById('main'))" >Главное</button>
         <button id="themebtn" class="menubtnbtn" onclick="closeall(document.getElementById('theme'))" >Оформление</button>
         <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование текста</button>
@@ -199,9 +199,9 @@
         <button id="Enhilaboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");' >О Enhil</button>
         <button id="aboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");' >О нас</button>
         <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
-      </menu>
+    </menu>
 
-      <div id="codingtext" class="any">
+    <div id="codingtext" class="any">
         <h1 class="center">Шифровка</h1>
         <p>Текст для шифрования</p>
         <input id="textneedtobecoding" placeholder="Введите текст" onclick="handleEncrypt()">
@@ -214,22 +214,22 @@
 
 
 
-      </div>
+    </div>
 
 
-      <div id="theme" class="any">
+    <div id="theme" class="any">
         <h1 class="center">Оформление</h1>
         <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
-          <h1>Тема интерфейса</h1>
-          <div style="display: flex; align-items: center;">
+        <h1>Тема интерфейса</h1>
+        <div style="display: flex; align-items: center;">
             <label class="switch" style="margin-bottom: 10px;">
-              <input type="checkbox" id="toggle-theme">
-              <span class="slider"></span>
+            <input type="checkbox" id="toggle-theme">
+            <span class="slider"></span>
             </label>
             <h2 style="margin-left: 10px;">Светлая/Темная</h2>
-          </div>
-          </div>
         </div>
+        </div>
+    </div>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="back.js"></script>
@@ -237,38 +237,27 @@
 
     let tg = window.Telegram.WebApp;
     tg.ready();
-    let userid = tg.initDataUnsafe.user.id;
-    if (!userid) {userid = 1802735160;}
-    if ([1802735160].includes(userid)) {
+
+
+    
+
+
+        let main = document.getElementById("main");
+        let theme = document.getElementById("theme");
+        let menu = document.getElementById("menu");
+        let codingtext = document.getElementById("codingtext");
   
         function closeall(site) {
-        main.style.display = "none";
-        theme.style.display = "none";
-        menu.style.display = "none";
-        codingtext.style.display = "none";
-        site.style.display = "block";
+            main.style.display = "none";
+            theme.style.display = "none";
+            menu.style.display = "none";
+            codingtext.style.display = "none";
+            site.style.display = "block";
         }
-    
 
         tg.expand();
 
-
-        
         const toggletheme = document.getElementById("toggle-theme");
-
-
-        // Проверка сохраненного состояния
-        window.onload = function () {
-        const theme = getCookie('theme');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-theme');
-            darkmode();
-            toggletheme.checked = true;
-        } else {
-            document.body.classList.add('white-theme');
-            whitemode();
-        }
-        };
 
         toggletheme.addEventListener('change', function () {
             if (this.checked) {
@@ -284,16 +273,31 @@
             }
         });
 
-    } else {
+
+    let userid = tg.initDataUnsafe.user.id;
+    if (!userid) {userid = 1802735160;}
+    if ([1802735160, 1959510469].includes(userid)) {
+        // Проверка сохраненного состояния
+        window.onload = function () {
+        const theme = getCookie('theme');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            darkmode();
+            toggletheme.checked = true;
+        } else {
+            document.body.classList.add('white-theme');
+            whitemode();
+        }
+        };
+    }
+    else {
+
         document.getElementById("menubtn").style.display = "none";
         document.getElementById("maintext").innerText = "Извините, вы не зарегестрированный пользователь.\nОтказ в обслуживании";
         document.getElementById("logo").src = "krest.png";
         document.getElementById("logo").style.borderRadius = "0";
+
     }
-    
-    
-
-
   </script>
 </body>
 </html>
