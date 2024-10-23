@@ -1,148 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed RSA Key Encryption</title>
-</head>
-<body>
-    <h1>Encrypt/Decrypt with Fixed RSA Keys</h1>
+// Функция для установки куки
+function setCookie(name, value, days) {
+    let date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Срок хранения куки
+    let expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+        
+// Функция для получения куки
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return matches ? matches[2] : null;
+}
 
-    <textarea id="plaintext" placeholder="Enter text to encrypt"></textarea>
-    <button onclick="encryptText()">Encrypt</button>
+function darkmode() {
+    document.documentElement.style.setProperty("--color-text", "#ffffff");
+    document.documentElement.style.setProperty("--color-btn", "#5b5b5b");
+}
 
-    <h3>Encrypted Data</h3>
-    <textarea id="encryptedData" readonly></textarea>
+function whitemode() {
+    document.documentElement.style.setProperty("--color-text", "#aaaaaa");
+    document.documentElement.style.setProperty("--color-btn", "#eeeeee");
+}
 
-    <h3>Decrypted Data</h3>
-    <textarea id="decryptedData" readonly></textarea>
-    <button onclick="decryptText()">Decrypt</button>
 
-    <script>
-        // Зашитые публичный и приватный RSA ключи (в формате Base64)
-        const publicKeyBase64 = 'MIIBIjANBgkq...';  // Заменить на сгенерированный публичный ключ
-        const privateKeyBase64 = 'MIIEvgIBADAN...';  // Заменить на сгенерированный приватный ключ
 
-        let aesKey; // Сгенерированный AES ключ
-        let encryptedAESKey; // Зашифрованный AES ключ
-        let encryptedText; // Зашифрованный текст
-        let iv; // Вектор инициализации
 
-        // Функция для импорта ключей из Base64
-        async function importRSAKey(base64, isPublic) {
-            const binaryDerString = window.atob(base64); // Декодируем из Base64
-            const binaryDer = new Uint8Array(binaryDerString.length);
-            for (let i = 0; i < binaryDerString.length; i++) {
-                binaryDer[i] = binaryDerString.charCodeAt(i);
-            }
-            return crypto.subtle.importKey(
-                'spki', // Для публичного ключа (меняется на 'pkcs8' для приватного)
-                binaryDer.buffer,
-                {
-                    name: 'RSA-OAEP',
-                    hash: {name: 'SHA-256'}
-                },
-                true,
-                isPublic ? ['encrypt'] : ['decrypt'] // Указываем, для чего используется ключ
-            );
-        }
 
-        // Импорт RSA ключей при загрузке
-        let publicKey, privateKey;
-        async function loadRSAKeys() {
-            publicKey = await importRSAKey(publicKeyBase64, true);
-            privateKey = await importRSAKey(privateKeyBase64, false);
-        }
+let rsaKeyPair;
+let encryptedText, iv, encryptedAESKey;
 
-        // Функция для шифрования текста
-        async function encryptText() {
-            const plaintext = document.getElementById('plaintext').value;
-            if (!plaintext) {
-                alert('Please enter some text.');
-                return;
-            }
+// Генерация AES ключа для каждого сообщения
+async function generateAESKey() {
+    return await crypto.subtle.generateKey(
+        {
+            name: "AES-GCM",
+            length: 256,
+        },
+        true,
+        ["encrypt", "decrypt"]
+    );
+}
 
-            // Генерация AES ключа
-            aesKey = await crypto.subtle.generateKey(
-                {
-                    name: 'AES-GCM',
-                    length: 256,
-                },
-                true,
-                ['encrypt', 'decrypt']
-            );
 
-            // Шифрование текста с помощью AES
-            iv = crypto.getRandomValues(new Uint8Array(12)); // Вектор инициализации
-            const encodedText = new TextEncoder().encode(plaintext);
-            encryptedText = await crypto.subtle.encrypt(
-                {
-                    name: 'AES-GCM',
-                    iv: iv,
-                },
-                aesKey,
-                encodedText
-            );
+// Функция для расшифровки текста
+async function decryptText(encryptedText, encryptedAESKey) {
+    // Дешифровка AES ключа с использованием RSA приватного ключа
+    const decryptedAESKey = await crypto.subtle.decrypt(
+        {
+            name: "RSA-OAEP",
+        },
+        rsaKeyPair.privateKey,
+        encryptedAESKey
+    );
 
-            // Шифрование AES ключа с помощью RSA
-            const exportedAESKey = await crypto.subtle.exportKey('raw', aesKey);
-            encryptedAESKey = await crypto.subtle.encrypt(
-                {
-                    name: 'RSA-OAEP',
-                },
-                publicKey, // Используем зафиксированный публичный ключ
-                exportedAESKey
-            );
+    const aesKey = await crypto.subtle.importKey(
+        "raw",
+        decryptedAESKey,
+        {
+            name: "AES-GCM",
+        },
+        true,
+        ["decrypt"]
+    );
 
-            // Вывод зашифрованного текста и AES ключа
-            document.getElementById('encryptedData').value = `Encrypted Text: ${btoa(String.fromCharCode(...new Uint8Array(encryptedText)))}
-            
-Encrypted AES Key (RSA encrypted): ${btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)))}`;
-        }
+    // Дешифровка текста с использованием AES
+    const decryptedText = await crypto.subtle.decrypt(
+        {
+            name: "AES-GCM",
+            iv: iv,
+        },
+        aesKey,
+        encryptedText
+    );
 
-        // Функция для расшифровки текста
-        async function decryptText() {
-            if (!encryptedText || !encryptedAESKey) {
-                alert('Please encrypt data first.');
-                return;
-            }
+    return new TextDecoder().decode(decryptedText);
+}
 
-            // Дешифрование AES ключа с помощью RSA приватного ключа
-            const decryptedAESKey = await crypto.subtle.decrypt(
-                {
-                    name: 'RSA-OAEP',
-                },
-                privateKey, // Используем зафиксированный приватный ключ
-                encryptedAESKey
-            );
 
-            // Восстановление AES ключа
-            const importedAESKey = await crypto.subtle.importKey(
-                'raw',
-                decryptedAESKey,
-                {
-                    name: 'AES-GCM',
-                },
-                true,
-                ['decrypt']
-            );
 
-            // Дешифрование текста с помощью AES
-            const decryptedText = await crypto.subtle.decrypt(
-                {
-                    name: 'AES-GCM',
-                    iv: iv,
-                },
-                importedAESKey,
-                encryptedText
-            );
 
-            // Вывод расшифрованного текста
-            document.getElementById('decryptedData').value = new TextDecoder().decode(decryptedText);
-        }
 
-        // Загружаем зафиксированные RSA ключи при загрузке страницы
-        window.onload = loadRSAKeys;
-    </script>
-</body>
-</html>
+
+// Функция для вызова шифрования
+async function handleEncrypt() {
+    const plaintext = document.getElementById('plaintext').value;
+    if (!plaintext) {
+        alert('Please enter some text.');
+        return;
+    }
+    // Шифрование текста
+    const { encryptedText: et, encryptedAESKey: eAESKey } = await encryptText(plaintext);
+    encryptedText = et;
+    encryptedAESKey = eAESKey;
+    // Показываем зашифрованные данные и ключи
+    document.getElementById('encryptedData').value = btoa(String.fromCharCode(...new Uint8Array(encryptedText)));
+    document.getElementById('aesKey').value = btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)));
+}
+
+
+
+
+// Функция для вызова расшифровки
+async function handleDecrypt() {
+    if (!encryptedText || !encryptedAESKey) {
+        document.getElementById('decryptedData').value = "Введите текст!!!";
+        return;
+    }
+    // Дешифровка текста
+    const decryptedText = await decryptText(encryptedText, encryptedAESKey);
+    // Показываем расшифрованный текст
+    document.getElementById('decryptedData').value = decryptedText;
+}
