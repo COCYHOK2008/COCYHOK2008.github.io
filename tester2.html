@@ -1,113 +1,95 @@
-// Функция для установки куки
-function setCookie(name, value, days) {
-    let date = new Date();
-    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Срок хранения куки
-    let expires = "expires=" + date.toUTCString();
-    document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
-        
-// Функция для получения куки
-function getCookie(name) {
-    let matches = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return matches ? matches[2] : null;
-}
-
-function darkmode() {
-    document.documentElement.style.setProperty("--color-text", "#ffffff");
-    document.documentElement.style.setProperty("--color-btn", "#5b5b5b");
-}
-
-function whitemode() {
-    document.documentElement.style.setProperty("--color-text", "#aaaaaa");
-    document.documentElement.style.setProperty("--color-btn", "#eeeeee");
-}
-
-
-
-
-
-let rsaKeyPair;
-let encryptedText, iv, encryptedAESKey;
-
-// Генерация AES ключа для каждого сообщения
-async function generateAESKey() {
-    return await crypto.subtle.generateKey(
-        {
-            name: "AES-GCM",
-            length: 256,
-        },
-        true,
-        ["encrypt", "decrypt"]
-    );
-}
-
-
-// Функция для расшифровки текста
-async function decryptText(encryptedText, encryptedAESKey) {
-    // Дешифровка AES ключа с использованием RSA приватного ключа
-    const decryptedAESKey = await crypto.subtle.decrypt(
-        {
-            name: "RSA-OAEP",
-        },
-        rsaKeyPair.privateKey,
-        encryptedAESKey
-    );
-
-    const aesKey = await crypto.subtle.importKey(
-        "raw",
-        decryptedAESKey,
-        {
-            name: "AES-GCM",
-        },
-        true,
-        ["decrypt"]
-    );
-
-    // Дешифровка текста с использованием AES
-    const decryptedText = await crypto.subtle.decrypt(
-        {
-            name: "AES-GCM",
-            iv: iv,
-        },
-        aesKey,
-        encryptedText
-    );
-
-    return new TextDecoder().decode(decryptedText);
-}
-
-
-
-
-
-
-// Функция для вызова шифрования
-async function handleEncrypt() {
-    const plaintext = document.getElementById('plaintext').value;
-    if (!plaintext) {
-        alert('Please enter some text.');
-        return;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тестирование Telegram Web App API</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
     }
-    // Шифрование текста
-    const { encryptedText: et, encryptedAESKey: eAESKey } = await encryptText(plaintext);
-    encryptedText = et;
-    encryptedAESKey = eAESKey;
-    // Показываем зашифрованные данные и ключи
-    document.getElementById('encryptedData').value = btoa(String.fromCharCode(...new Uint8Array(encryptedText)));
-    document.getElementById('aesKey').value = btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)));
-}
-
-
-
-
-// Функция для вызова расшифровки
-async function handleDecrypt() {
-    if (!encryptedText || !encryptedAESKey) {
-        document.getElementById('decryptedData').value = "Введите текст!!!";
-        return;
+    button {
+      margin: 10px 0;
+      padding: 10px 20px;
+      font-size: 16px;
     }
-    // Дешифровка текста
-    const decryptedText = await decryptText(encryptedText, encryptedAESKey);
-    // Показываем расшифрованный текст
-    document.getElementById('decryptedData').value = decryptedText;
-}
+  </style>
+</head>
+<body>
+  <h1>Тестируем Telegram Web App API</h1>
+  
+  <button id="showMainButton">Показать MainButton</button>
+  <button id="hideMainButton">Скрыть MainButton</button>
+  <button id="vibrationButton">Вибрация</button>
+  <button id="showBackButton">Показать BackButton</button>
+  <button id="hideBackButton">Скрыть BackButton</button>
+  <button id="closeApp">Закрыть приложение</button>
+  <button id="expandApp">Развернуть приложение</button>
+  <button id="sendData">Отправить данные</button>
+
+  <div id="userInfo"></div>
+  <div id="heightInfo"></div>
+
+  <script>
+    // Инициализация
+    Telegram.WebApp.ready();
+
+    // Работа с MainButton
+    const mainButton = Telegram.WebApp.MainButton;
+    document.getElementById('showMainButton').addEventListener('click', () => {
+      mainButton.setText("Нажми меня!").show();
+    });
+    document.getElementById('hideMainButton').addEventListener('click', () => {
+      mainButton.hide();
+    });
+    mainButton.onClick(() => {
+      alert('MainButton нажата!');
+    });
+
+    // Вибрация
+    document.getElementById('vibrationButton').addEventListener('click', () => {
+      Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    });
+
+    // Работа с BackButton
+    const backButton = Telegram.WebApp.BackButton;
+    document.getElementById('showBackButton').addEventListener('click', () => {
+      backButton.show();
+    });
+    document.getElementById('hideBackButton').addEventListener('click', () => {
+      backButton.hide();
+    });
+    backButton.onClick(() => {
+      alert('BackButton нажата!');
+    });
+
+    // Закрытие приложения
+    document.getElementById('closeApp').addEventListener('click', () => {
+      Telegram.WebApp.close();
+    });
+
+    // Развернуть приложение
+    document.getElementById('expandApp').addEventListener('click', () => {
+      Telegram.WebApp.expand();
+    });
+
+    // Отправка данных боту
+    document.getElementById('sendData').addEventListener('click', () => {
+      Telegram.WebApp.sendData("Тестовые данные отправлены!");
+    });
+
+    // Получение информации о пользователе
+    const user = Telegram.WebApp.initDataUnsafe.user;
+    document.getElementById('userInfo').innerHTML = `Пользователь: ${user.first_name} ${user.last_name}`;
+
+    // Информация о высоте экрана
+    const height = Telegram.WebApp.viewportStableHeight;
+    document.getElementById('heightInfo').innerHTML = `Высота экрана: ${height}px`;
+
+  </script>
+</body>
+</html>
