@@ -30,6 +30,11 @@
   <button id="closeApp">Закрыть приложение</button>
   <button id="expandApp">Развернуть приложение</button>
   <button id="sendData">Отправить данные</button>
+  <button id="changeHeaderColor">Сменить цвет хедера</button>
+  <button id="changeBackgroundColor">Сменить цвет фона</button>
+  <button id="showPopup">Показать popup</button>
+  <button id="requestCloseConfirmation">Запрос на закрытие</button>
+  <button id="disableCloseConfirmation">Отключить запрос на закрытие</button>
 
   <div id="userInfo"></div>
   <div id="heightInfo"></div>
@@ -80,6 +85,46 @@
     // Отправка данных боту
     document.getElementById('sendData').addEventListener('click', () => {
       Telegram.WebApp.sendData("Тестовые данные отправлены!");
+    });
+
+    // Смена цвета хедера
+    document.getElementById('changeHeaderColor').addEventListener('click', () => {
+      Telegram.WebApp.setHeaderColor('bg_color');
+    });
+
+    // Смена цвета фона
+    document.getElementById('changeBackgroundColor').addEventListener('click', () => {
+      Telegram.WebApp.setBackgroundColor('#ffebcd'); // Пример: цвет бежевый
+    });
+
+    // Показать popup
+    document.getElementById('showPopup').addEventListener('click', () => {
+      Telegram.WebApp.showPopup({
+        title: 'Подтверждение',
+        message: 'Вы уверены, что хотите продолжить?',
+        buttons: [
+          { id: 'yes', type: 'default', text: 'Да' },
+          { id: 'no', type: 'destructive', text: 'Нет' }
+        ]
+      }, (button_id) => {
+        if (button_id === 'yes') {
+          alert('Пользователь выбрал Да');
+        } else {
+          alert('Пользователь выбрал Нет');
+        }
+      });
+    });
+
+    // Включить подтверждение при закрытии
+    document.getElementById('requestCloseConfirmation').addEventListener('click', () => {
+      Telegram.WebApp.setClosingConfirmationEnabled(true);
+      alert('Теперь при закрытии будет запрашиваться подтверждение');
+    });
+
+    // Отключить подтверждение при закрытии
+    document.getElementById('disableCloseConfirmation').addEventListener('click', () => {
+      Telegram.WebApp.disableClosingConfirmation();
+      alert('Подтверждение при закрытии отключено');
     });
 
     // Получение информации о пользователе
