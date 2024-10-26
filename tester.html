@@ -1,314 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Shoop</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css?family=Montserrat:200,500&display=swap");
-
-    :root {
-      --color-text: #aaaaaa;
-      --color-btn: #eeeeee;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: "Montserrat", sans-serif;
-      font-weight: 200;
-      transition: background-color 0.5s, color 0.5s;
-    }
-
-    .target {
-      width: 100%;
-      padding: 20px;
-    }
-
-    #menu {
-      width: 100%;
-      padding: 20px;
-      text-align: center;
-      display: none;
-    }
-
-    .any {
-      display: none;
-    }
-
-    h1 {
-      margin-top: 50px;
-      margin-bottom: 10px;
-    }
-    img {
-      width: 70px;
-      margin: 30px auto;
-    }
-    p {
-      width: 350px;
-      margin: 0 auto;
-      font-weight: 400;
-    }
-    a {
-      width: 350px;
-      margin: 0 auto;
-      font-weight: 400;
-    }
-    .center {
-      text-align: center;
-    }
-
-    input {
-      background-color: var(--color-btn);
-      color: var(--color-text);
-      width: 90%;
-      outline: none;
-      margin: 10px 5%;
-      padding: 15px 10px;
-      font-size: 10px;
-      border: 2px solid silver;
-      border-radius: 5px;
-    }
-    input:focus {
-      border-color: #6e6e6e;
-    }
-    
-    .menubtn {
-      border-radius: 5px;
-      background-color: var(--color-btn);
-      color: var(--color-text);
-      padding: 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-image: url('menu.png');
-      background-size: cover;
-      background-position: center;
-      width: 10px;
-      height: 10px;
-      margin-left: 10px;
-      position: relative;
-      top: 7px;
-      transition: 0.5s;
-    }
-
-    .menubtnbtn {
-        background-color: var(--color-btn);
-        color: var(--color-text);
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-size: cover;
-        background-position: center;
-        width: 100%;
-        height: 10px;
-        border-radius: 0;
-        margin-top: 10px;
-    }
-
-    .light-theme {
-        background-color: #ffffff;
-        color: #000000;
-    }
-    .dark-theme {
-        background-color: #000000;
-        color: #ffffff;
-    }
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
-    }
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
-    
-    .lilcenterbtn {
-      border-radius: 5px;
-      background-color: var(--color-btn);
-      color: var(--color-text);
-      padding: 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-size: cover;
-      background-position: center;
-      margin-left: 10px;
-      position: relative;
-      top: 7px;
-      margin-bottom: 10px;
-      transition: 0.5s;
-    }
-
-
-  </style>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Close Keyboard Example</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
 </head>
-<body class="light-theme">
-
-
-    <button id="menubtn" class="menubtn" onclick="closeall(document.getElementById('menu'))"></button>
-
-
-    <div id="main" class="center">
-        <h1>Главное</h1>
-        <img id="logo" style="border-radius: 100%;" src="logo.jpeg">
-        <p id="maintext">Теперь тут нет испанского, радуйтесь. Этот бот создан компанией ООО "Лига". Этот бот само совершенство, он то что делает людей великими. Говорят человек появился благодаря тому что Лига решила создать из своих набросков какой-нибудь проект</p>
-    </div>
-
-
-
-    <menu id="menu">
-        <button id="mainbtn" class="menubtnbtn" onclick="closeall(document.getElementById('main'))" >Главное</button>
-        <button id="themebtn" class="menubtnbtn" onclick="closeall(document.getElementById('theme'))" >Оформление</button>
-        <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование/расшифрование</button>
-
-
-
-        <button id="Enhilaboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");' >О Enhil</button>
-        <button id="aboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");' >О нас</button>
-        <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
-    </menu>
-
-    <div id="codingtext" class="any">
-      <h1>Шифрование/расшифрование данных</h1>
-
-      <h3>Данные для шифрования</h3>
-      <input id="plaintext" placeholder="Введите данные для шифрования..." style="display: flex; align-items: center;"></input>
-      <button onclick="encryptData()" class="lilcenterbtn">Зашифровать данные</button>
-
-      <h3>Зашифрованные данные/данные для расшифрования</h3>
-      <input id="encryptedData" placeholder="Введите данные для расшифрования..."></input>
-
-      <h3>Расшифрованные данные</h3>
-      <input id="decryptedData" placeholder="расшифрованные данные"></input>
-      <button onclick="decryptData()" class="lilcenterbtn">Расшифровать данные</button>
-    </div>
-
-
-    <div id="theme" class="any">
-        <h1 class="center">Оформление</h1>
-        <div style="display: flex; flex-direction: column; align-items: flex-start;margin-left: 10px;">
-        <h1>Тема интерфейса</h1>
-        <div style="display: flex; align-items: center;">
-            <label class="switch" style="margin-bottom: 10px;">
-            <input type="checkbox" id="toggle-theme">
-            <span class="slider"></span>
-            </label>
-            <h2 style="margin-left: 10px;">Светлая/Темная</h2>
-        </div>
-        </div>
-    </div>
-  
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="back.js"></script>
-  <script>
-
-    let tg = window.Telegram.WebApp;
-
-    let main = document.getElementById("main");
-    let theme = document.getElementById("theme");
-    let menu = document.getElementById("menu");
-    let codingtext = document.getElementById("codingtext");
-
-    function closeall(site) {
-      main.style.display = "none";
-      theme.style.display = "none";
-      menu.style.display = "none";
-      codingtext.style.display = "none";
-      site.style.display = "block";
-    }
-
-    tg.expand();
-
-    const toggletheme = document.getElementById("toggle-theme");
-
-    toggletheme.addEventListener('change', function () {
-      if (this.checked) {
-        document.body.classList.remove('light-theme');
-        document.body.classList.add('dark-theme');
-        darkmode();
-        setCookie('theme', 'dark', 365);
-      } else {
-        document.body.classList.remove('dark-theme');
-        document.body.classList.add('light-theme');
-        whitemode();
-        setCookie('theme', 'light', 365);
-      }
-    });
-
-
-    let userid = tg.initDataUnsafe.user.id;
-    if (!userid) {userid = 1802735160;}
-    if ([1802735160].includes(userid)) {
-      // Проверка сохраненного состояния
-      window.onload = function () {
-      const theme = getCookie('theme');
-      if (theme === 'dark') {
-          document.body.classList.add('dark-theme');
-          darkmode();
-          toggletheme.checked = true;
-      } else {
-          document.body.classList.add('white-theme');
-          whitemode();
-      }
-      };
-
-    } else {
-
-      document.getElementById("menubtn").style.display = "none";
-      document.getElementById("maintext").innerText = "Извините, вы не зарегестрированный пользователь.\nОтказ в обслуживании";
-      document.getElementById("logo").src = "krest.png";
-      document.getElementById("logo").style.borderRadius = "0";
-
-    }
-  </script>
+<body>
+    <div class="overlay" onclick="closeKeyboard()"></div>
+    <input type="text" id="inputField" placeholder="Tap me">
+    <script>
+        function closeKeyboard() {
+            const inputField = document.getElementById('inputField');
+            inputField.blur(); // Убираем фокус с поля ввода
+        }
+    </script>
 </body>
 </html>
