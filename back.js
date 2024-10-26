@@ -69,8 +69,7 @@ async function importAESKey(base64Key) {
 async function encryptData() {
     const plaintext = document.getElementById('plaintext').value; // Получаем текст из поля для ввода
 
-    if (!plaintext) {                      // Если текст пустой, выводим предупреждение
-        alert('Please enter some text.');
+    if (!plaintext) { // Если текст пустой, выводим предупреждение
         return;
     }
 
@@ -101,10 +100,11 @@ async function encryptData() {
 async function decryptData() {
 
     
-    aesKey = await importAESKey(base64Key);
+    if (!aesKey) aesKey = await importAESKey(base64Key);
     
-
-    const [re, wi] = (String(document.getElementById('encryptedData').value)).split(":");
+    let decodemes = document.getElementById('encryptedData').value;
+    if (!decodemes) return;
+    const [re, wi] = (String()).split(":");
     const ivAr = Uint8Array.from(atob(re), c => c.charCodeAt(0));
     const encry = new Uint8Array(atob(wi).split("").map(c => c.charCodeAt(0)));
 
