@@ -1,3 +1,27 @@
+// Получаем все input элементы на странице
+const inputs = document.querySelectorAll('input');
+
+document.body.addEventListener('click', function(event) {
+    // Проверяем, не кликнули ли мы по какому-либо полю ввода
+    let isInputClicked = false;
+    inputs.forEach(input => {
+        if (input.contains(event.target)) {
+            isInputClicked = true;
+        }
+    });
+    // Если не кликнули по input, убираем фокус
+    if (!isInputClicked) {
+        inputs.forEach(input => input.blur());
+    }
+});
+
+
+
+
+
+
+
+
 // Функция для установки куки
 function setCookie(name, value, days) {
     let date = new Date();
