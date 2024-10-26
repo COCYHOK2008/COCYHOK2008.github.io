@@ -19,11 +19,12 @@
     <input type="text" class="input-field" placeholder="Нажми сюда..." />
     
     <script>
-        document.body.addEventListener('click', function() {
-            // Скрываем клавиатуру
-            const activeElement = document.activeElement;
-            if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
-                activeElement.blur(); // Убираем фокус с текстового поля
+        const inputField = document.querySelector('.input-field');
+
+        document.body.addEventListener('click', function(event) {
+            // Проверяем, не кликнули ли мы по текстовому полю
+            if (!inputField.contains(event.target)) {
+                inputField.blur(); // Убираем фокус с текстового поля
             }
         });
     </script>
