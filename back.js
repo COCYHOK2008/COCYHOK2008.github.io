@@ -23,91 +23,78 @@ function whitemode() {
 }
 
 
+let aesKey;          // Переменная для AES-ключа, который будет использован для шифрования текста
+let encryptedAESKey; // Переменная для хранения зашифрованного AES-ключа
+let encryptedText;   // Переменная для хранения зашифрованного текста
+let iv;              // Вектор инициализации (IV) для алгоритма AES-GCM
+const base64Key = "rnE8UZo1OpmIe2gBA9pAKfhEWMvst4zHvDapoepwWeU=";
 
-
-
-let rsaKeyPair;
-let encryptedText, iv, encryptedAESKey;
-
-// Генерация AES ключа для каждого сообщения
-async function generateAESKey() {
-    return await crypto.subtle.generateKey(
-        {
-            name: "AES-GCM",
-            length: 256,
-        },
+// Импорт ключа из Base64 строки
+async function importAESKey(base64Key) {
+    const rawKey = Uint8Array.from(atob(base64Key), c => c.charCodeAt(0));
+    return await crypto.subtle.importKey(
+        "raw",
+        rawKey,
+        { name: "AES-GCM" },
         true,
         ["encrypt", "decrypt"]
     );
 }
 
+// Функция для шифрования данных (гибридное шифрование: AES для данных, RSA для ключа AES)
+async function encryptData() {
+    const plaintext = document.getElementById('plaintext').value; // Получаем текст из поля для ввода
 
-// Функция для расшифровки текста
-async function decryptText(encryptedText, encryptedAESKey) {
-    // Дешифровка AES ключа с использованием RSA приватного ключа
-    const decryptedAESKey = await crypto.subtle.decrypt(
-        {
-            name: "RSA-OAEP",
-        },
-        rsaKeyPair.privateKey,
-        encryptedAESKey
-    );
-
-    const aesKey = await crypto.subtle.importKey(
-        "raw",
-        decryptedAESKey,
-        {
-            name: "AES-GCM",
-        },
-        true,
-        ["decrypt"]
-    );
-
-    // Дешифровка текста с использованием AES
-    const decryptedText = await crypto.subtle.decrypt(
-        {
-            name: "AES-GCM",
-            iv: iv,
-        },
-        aesKey,
-        encryptedText
-    );
-
-    return new TextDecoder().decode(decryptedText);
-}
-
-
-
-
-
-
-// Функция для вызова шифрования
-async function handleEncrypt() {
-    const plaintext = document.getElementById('plaintext').value;
-    if (!plaintext) {
+    if (!plaintext) {                      // Если текст пустой, выводим предупреждение
         alert('Please enter some text.');
         return;
     }
-    // Шифрование текста
-    const { encryptedText: et, encryptedAESKey: eAESKey } = await encryptText(plaintext);
-    encryptedText = et;
-    encryptedAESKey = eAESKey;
-    // Показываем зашифрованные данные и ключи
-    document.getElementById('encryptedData').value = btoa(String.fromCharCode(...new Uint8Array(encryptedText)));
-    document.getElementById('aesKey').value = btoa(String.fromCharCode(...new Uint8Array(encryptedAESKey)));
+
+    // Инициализация AES-ключа из Base64 (замени на свой реальный ключ)
+    // Пример ключа в Base64
+    aesKey = await importAESKey(base64Key);
+
+    // Генерация случайного вектора инициализации (IV) для AES
+    iv = crypto.getRandomValues(new Uint8Array(12));  // 12 байт для IV (рекомендуется для AES-GCM)
+    const encodedText = new TextEncoder().encode(plaintext); // Кодируем текст в формат Uint8Array
+
+    // Шифруем текст с использованием AES-GCM
+    encryptedText = await crypto.subtle.encrypt(
+        {
+            name: "AES-GCM",              // Используем AES-GCM для шифрования
+            iv: iv,                       // Передаем сгенерированный IV
+        },
+        aesKey,                            // Используем сгенерированный AES-ключ
+        encodedText                        // Текст для шифрования (закодирован как Uint8Array)
+    );
+
+    // Отображаем зашифрованный текст в поле вывода
+    document.getElementById('encryptedData').value = 
+    btoa(String.fromCharCode(...new Uint8Array(iv))) + ":" + btoa(String.fromCharCode(...new Uint8Array(encryptedText)));
 }
 
+// Функция для дешифрования данных
+async function decryptData() {
 
+    
+    aesKey = await importAESKey(base64Key);
+    
 
+    const [re, wi] = (String(document.getElementById('encryptedData').value)).split(":");
+    const ivAr = Uint8Array.from(atob(re), c => c.charCodeAt(0));
+    const encry = new Uint8Array(atob(wi).split("").map(c => c.charCodeAt(0)));
 
-// Функция для вызова расшифровки
-async function handleDecrypt() {
-    if (!encryptedText || !encryptedAESKey) {
-        document.getElementById('decryptedData').value = "Введите текст!!!";
-        return;
-    }
-    // Дешифровка текста
-    const decryptedText = await decryptText(encryptedText, encryptedAESKey);
-    // Показываем расшифрованный текст
-    document.getElementById('decryptedData').value = decryptedText;
+    // Дешифруем текст с использованием AES-GCM
+    const decryptedText = await crypto.subtle.decrypt(
+        {
+            name: "AES-GCM",              // Алгоритм AES-GCM для расшифровки
+            iv: ivAr,                       // Передаем тот же IV, что использовался при шифровании
+        },
+        aesKey,                         // Используем восстановленный AES-ключ
+        encry                   // Зашифрованный текст для расшифровки
+    );
+
+    // Отображаем расшифрованный текст в поле вывода
+    document.getElementById('decryptedData').value = 
+    new TextDecoder().decode(decryptedText); // Декодируем Uint8Array обратно в строку
 }
