@@ -100,11 +100,11 @@ async function encryptData() {
 async function decryptData() {
 
     
-    if (!aesKey) aesKey = await importAESKey(base64Key);
+    aesKey = await importAESKey(base64Key);
     
     let decodemes = document.getElementById('encryptedData').value;
-    if (!decodemes) return;
-    const [re, wi] = (String()).split(":");
+    if (decodemes === null) return;
+    const [re, wi] = (String(decodemes)).split(":");
     const ivAr = Uint8Array.from(atob(re), c => c.charCodeAt(0));
     const encry = new Uint8Array(atob(wi).split("").map(c => c.charCodeAt(0)));
 
