@@ -64,6 +64,8 @@
     }
 
     input {
+      background-color: var(--color-btn);
+      color: var(--color-text);
       width: 90%;
       outline: none;
       margin: 10px 5%;
@@ -164,9 +166,46 @@
         transform: translateX(26px);
     }
     
-    .tonkoin {
-
+    .lilcenterbtn {
+      border-radius: 5px;
+      background-color: var(--color-btn);
+      color: var(--color-text);
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
       margin-left: 10px;
+      position: relative;
+      top: 7px;
+      margin-bottom: 10px;
+      transition: 0.5s;
+    }
+
+    .copybtn {
+      border-radius: 5px;
+      background-color: var(--color-btn);
+      color: var(--color-text);
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+      position: relative;
+      top: 7px;
+      margin-bottom: 10px;
+      transition: 0.5s;
     }
 
 
@@ -191,8 +230,7 @@
     <menu id="menu">
         <button id="mainbtn" class="menubtnbtn" onclick="closeall(document.getElementById('main'))" >Главное</button>
         <button id="themebtn" class="menubtnbtn" onclick="closeall(document.getElementById('theme'))" >Оформление</button>
-        <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование текста</button>
-        <button id="decodingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('decodingtext'))" >Расшифрование текста</button>
+        <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование/расшифрование</button>
 
 
 
@@ -202,24 +240,27 @@
     </menu>
 
     <div id="codingtext" class="any">
-        <h1 class="center">Шифровка</h1>
-        <p>Текст для шифрования</p>
-        <input id="textneedtobecoding" placeholder="Введите текст" onclick="handleEncrypt()">
+      <h1>Шифрование/расшифрование данных</h1>
 
-        <p>Зашифрованный текст</p>
-        <input id="textwhobecoding" placeholder="Здесь будет зашифрованное сообщение" readonly>
-        <p>Ключ для расшифрования сообщения</p>
-        <input id="keysfortextwhobecoding" placeholder="Ключи для расшифровки текста" readonly>
+      <h3>Данные для шифрования</h3>
+      <input id="plaintext" placeholder="Введите данные для шифрования..." style="display: flex; align-items: center;"></input>
+      <button onclick="copyTo('plaintext')" class="copybtn"></button>
+      <button onclick="encryptData()" class="lilcenterbtn">Зашифровать данные</button>
 
+      <h3>Зашифрованные данные/данные для расшифрования</h3>
+      <input id="encryptedData" placeholder="Введите данные для расшифрования..."></input>
+      <button onclick="copyTo('encryptedData')" class="copybtn"></button>
 
-
-
+      <h3>Расшифрованные данные</h3>
+      <input id="decryptedData" placeholder="расшифрованные данные"></input>
+      <button onclick="copyTo('decryptedData')" class="copybtn"></button>
+      <button onclick="decryptData()" class="lilcenterbtn">Расшифровать данные</button>
     </div>
 
 
     <div id="theme" class="any">
         <h1 class="center">Оформление</h1>
-        <div style="display: flex; flex-direction: column; align-items: flex-start;" class="tonkoin">
+        <div style="display: flex; flex-direction: column; align-items: flex-start;margin-left: 10px;">
         <h1>Тема интерфейса</h1>
         <div style="display: flex; align-items: center;">
             <label class="switch" style="margin-bottom: 10px;">
@@ -236,66 +277,61 @@
   <script>
 
     let tg = window.Telegram.WebApp;
-    tg.ready();
 
+    let main = document.getElementById("main");
+    let theme = document.getElementById("theme");
+    let menu = document.getElementById("menu");
+    let codingtext = document.getElementById("codingtext");
 
-    
+    function closeall(site) {
+      main.style.display = "none";
+      theme.style.display = "none";
+      menu.style.display = "none";
+      codingtext.style.display = "none";
+      site.style.display = "block";
+    }
 
+    tg.expand();
 
-        let main = document.getElementById("main");
-        let theme = document.getElementById("theme");
-        let menu = document.getElementById("menu");
-        let codingtext = document.getElementById("codingtext");
-  
-        function closeall(site) {
-            main.style.display = "none";
-            theme.style.display = "none";
-            menu.style.display = "none";
-            codingtext.style.display = "none";
-            site.style.display = "block";
-        }
+    const toggletheme = document.getElementById("toggle-theme");
 
-        tg.expand();
-
-        const toggletheme = document.getElementById("toggle-theme");
-
-        toggletheme.addEventListener('change', function () {
-            if (this.checked) {
-                document.body.classList.remove('light-theme');
-                document.body.classList.add('dark-theme');
-                darkmode();
-                setCookie('theme', 'dark', 365);
-            } else {
-                document.body.classList.remove('dark-theme');
-                document.body.classList.add('light-theme');
-                whitemode();
-                setCookie('theme', 'light', 365);
-            }
-        });
+    toggletheme.addEventListener('change', function () {
+      if (this.checked) {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+        darkmode();
+        setCookie('theme', 'dark', 365);
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+        whitemode();
+        setCookie('theme', 'light', 365);
+      }
+    });
 
 
     let userid = tg.initDataUnsafe.user.id;
     if (!userid) {userid = 1802735160;}
-    if ([1802735160, 1959510469].includes(userid)) {
-        // Проверка сохраненного состояния
-        window.onload = function () {
-        const theme = getCookie('theme');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-theme');
-            darkmode();
-            toggletheme.checked = true;
-        } else {
-            document.body.classList.add('white-theme');
-            whitemode();
-        }
-        };
-    }
-    else {
+    if ([1802735160].includes(userid)) {
+      // Проверка сохраненного состояния
+      window.onload = function () {
+      const theme = getCookie('theme');
+      if (theme === 'dark') {
+          document.body.classList.add('dark-theme');
+          darkmode();
+          toggletheme.checked = true;
+      } else {
+          document.body.classList.add('white-theme');
+          whitemode();
+      }
+      };
 
-        document.getElementById("menubtn").style.display = "none";
-        document.getElementById("maintext").innerText = "Извините, вы не зарегестрированный пользователь.\nОтказ в обслуживании";
-        document.getElementById("logo").src = "krest.png";
-        document.getElementById("logo").style.borderRadius = "0";
+    } else {
+
+      document.getElementById("menubtn").style.display = "none";
+      document.getElementById("maintext").innerText = "Извините, вы не зарегестрированный пользователь.\nОтказ в обслуживании";
+      document.getElementById("logo").src = "krest.png";
+      document.getElementById("logo").style.borderRadius = "0";
 
     }
   </script>
