@@ -186,6 +186,28 @@
       transition: 0.5s;
     }
 
+    .copybtn {
+      border-radius: 5px;
+      background-color: var(--color-btn);
+      color: var(--color-text);
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+      position: relative;
+      top: 7px;
+      margin-bottom: 10px;
+      transition: 0.5s;
+    }
+
 
   </style>
 
@@ -222,13 +244,16 @@
 
       <h3>Данные для шифрования</h3>
       <input id="plaintext" placeholder="Введите данные для шифрования..." style="display: flex; align-items: center;"></input>
+      <button onclick="copyTo('plaintext')" class="copybtn"></button>
       <button onclick="encryptData()" class="lilcenterbtn">Зашифровать данные</button>
 
       <h3>Зашифрованные данные/данные для расшифрования</h3>
       <input id="encryptedData" placeholder="Введите данные для расшифрования..."></input>
+      <button onclick="copyTo('encryptedData')" class="copybtn"></button>
 
       <h3>Расшифрованные данные</h3>
       <input id="decryptedData" placeholder="расшифрованные данные"></input>
+      <button onclick="copyTo('decryptedData')" class="copybtn"></button>
       <button onclick="decryptData()" class="lilcenterbtn">Расшифровать данные</button>
     </div>
 
