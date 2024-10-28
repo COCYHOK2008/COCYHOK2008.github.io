@@ -51,7 +51,7 @@ let aesKey;          // Переменная для AES-ключа, которы
 let encryptedAESKey; // Переменная для хранения зашифрованного AES-ключа
 let encryptedText;   // Переменная для хранения зашифрованного текста
 let iv;              // Вектор инициализации (IV) для алгоритма AES-GCM
-const base64Key = "rnE8UZo1OpmIe2gBA9pAKfhEWMvst4zHvDapoepwWeU=";
+let base64Key = "rnE8UZo1OpmIe2gBA9pAKfhEWMvst4zHvDapoepwWeU=";
 
 // Импорт ключа из Base64 строки
 async function importAESKey(base64Key) {
@@ -79,7 +79,7 @@ async function encryptData() {
 
     // Генерация случайного вектора инициализации (IV) для AES
     iv = crypto.getRandomValues(new Uint8Array(12));  // 12 байт для IV (рекомендуется для AES-GCM)
-    const encodedText = new TextEncoder().encode(plaintext); // Кодируем текст в формат Uint8Array
+    let encodedText = new TextEncoder().encode(plaintext); // Кодируем текст в формат Uint8Array
 
     // Шифруем текст с использованием AES-GCM
     encryptedText = await crypto.subtle.encrypt(
@@ -104,12 +104,12 @@ async function decryptData() {
     
     let decodemes = document.getElementById('encryptedData').value;
     if (decodemes === null) return;
-    const [re, wi] = (String(decodemes)).split(":");
-    const ivAr = Uint8Array.from(atob(re), c => c.charCodeAt(0));
-    const encry = new Uint8Array(atob(wi).split("").map(c => c.charCodeAt(0)));
+    let [re, wi] = (String(decodemes)).split(":");
+    let ivAr = Uint8Array.from(atob(re), c => c.charCodeAt(0));
+    let encry = new Uint8Array(atob(wi).split("").map(c => c.charCodeAt(0)));
 
     // Дешифруем текст с использованием AES-GCM
-    const decryptedText = await crypto.subtle.decrypt(
+    let decryptedText = await crypto.subtle.decrypt(
         {
             name: "AES-GCM",              // Алгоритм AES-GCM для расшифровки
             iv: ivAr,                       // Передаем тот же IV, что использовался при шифровании
