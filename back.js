@@ -132,3 +132,8 @@ async function decryptData() {
     document.getElementById('decryptedData').value = 
         new TextDecoder().decode(decryptedText);
 }
+
+function copyTo(elementId) {
+    const copyText = document.getElementById(elementId).value;
+    navigator.clipboard.writeText(copyText);
+}
