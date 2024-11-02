@@ -17,9 +17,8 @@ document.body.addEventListener('click', function(event) {
     }
 });
 
-function vib() {
-    tg.HapticFeedback.impactOccurred('medium');
-}
+document.querySelectorAll("button").forEach(button => {button.addEventListener("click", () => {tg.HapticFeedback.impactOccurred('medium');})})
+
 
 
 
