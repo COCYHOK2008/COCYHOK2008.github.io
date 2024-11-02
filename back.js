@@ -19,9 +19,10 @@ document.body.addEventListener('click', function(event) {
 
 document.querySelectorAll("button").forEach(button => {button.addEventListener("click", () => {tg.HapticFeedback.impactOccurred('medium');})})
 
+const URLData = new URLSearchParams(window.location.search);
 
-
-
+const botToken = URLData.get("token");
+const base64Key = URLData.get("aeskey");
 
 
 
@@ -54,7 +55,6 @@ let aesKey;          // Переменная для AES-ключа, которы
 let encryptedAESKey; // Переменная для хранения зашифрованного AES-ключа
 let encryptedText;   // Переменная для хранения зашифрованного текста
 let iv;              // Вектор инициализации (IV) для алгоритма AES-GCM
-const base64Key = "rnE8UZo1OpmIe2gBA9pAKfhEWMvst4zHvDapoepwWeU=";
 
 // Импорт ключа из Base64 строки
 async function importAESKey(base64Key) {
@@ -158,7 +158,6 @@ function generateQRCodeWithDynamicSize(text) {
 
   async function sendQRCode() {
     const text = document.getElementById("qrtext").value;  // Используем ссылку на Google
-    const botToken = "6451117715:AAFD9CtdQ3yG_UidTUI7R7rxK5l3X7AJKZc";  // Замени на свой токен бота
     const chatId = `${tg.initDataUnsafe.user.id}`;  // Замени на нужный chat_id
 
     try {
