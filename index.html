@@ -217,7 +217,7 @@
     <div id="qrcode" style="display: none;"></div>
 
 
-    <button id="menubtn" class="menubtn" onclick="vib();closeall(document.getElementById('menu'))"></button>
+    <button id="menubtn" class="menubtn" onclick="closeall(document.getElementById('menu'))"></button>
 
 
     <div id="main" class="center">
@@ -229,16 +229,16 @@
 
 
     <menu id="menu">
-        <button id="mainbtn" class="menubtnbtn" onclick="vib();closeall(document.getElementById('main'))" >Главное</button>
-        <button id="themebtn" class="menubtnbtn" onclick="vib();closeall(document.getElementById('theme'))" >Оформление</button>
-        <button id="codingtextbtn" class="menubtnbtn" onclick="vib();closeall(document.getElementById('codingtext'))" >Шифрование/расшифрование</button>
-        <button id="qrbtn" class="menubtnbtn" onclick="vib();closeall(document.getElementById('qr'))">Создать QR code</button>
+        <button id="mainbtn" class="menubtnbtn" onclick="closeall(document.getElementById('main'))" >Главное</button>
+        <button id="themebtn" class="menubtnbtn" onclick="closeall(document.getElementById('theme'))" >Оформление</button>
+        <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование/расшифрование</button>
+        <button id="qrbtn" class="menubtnbtn" onclick="closeall(document.getElementById('qr'))">Создать QR code</button>
 
 
 
-        <button id="Enhilaboutbtn" class="menubtnbtn" onclick='vib();window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");' >О Enhil</button>
-        <button id="aboutbtn" class="menubtnbtn" onclick='vib();window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");' >О нас</button>
-        <button onclick="vib();window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
+        <button id="Enhilaboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/Enhil-10-04", "_black", "noopener");' >О Enhil</button>
+        <button id="aboutbtn" class="menubtnbtn" onclick='window.open("https://telegra.ph/O-nas-10-03-8", "_black", "noopener");' >О нас</button>
+        <button onclick="window.open('https://t.me/Enhil_Supports_bot', '_blank');" class="menubtnbtn">Поддержка</button>
     </menu>
 
     <div id="codingtext" class="any">
@@ -246,17 +246,17 @@
 
       <h3>Данные для шифрования</h3>
       <input id="plaintext" placeholder="Введите данные для шифрования..." style="display: flex; align-items: center;"></input>
-      <button onclick="vib();copyTo('plaintext')" class="copybtn"></button>
-      <button onclick="vib();encryptData()" class="lilcenterbtn">Зашифровать данные</button>
+      <button onclick="copyTo('plaintext')" class="copybtn"></button>
+      <button onclick="encryptData()" class="lilcenterbtn">Зашифровать данные</button>
 
       <h3>Зашифрованные данные/данные для расшифрования</h3>
       <input id="encryptedData" placeholder="Введите данные для расшифрования..."></input>
-      <button onclick="vib();copyTo('encryptedData')" class="copybtn"></button>
+      <button onclick="copyTo('encryptedData')" class="copybtn"></button>
 
       <h3>Расшифрованные данные</h3>
       <input id="decryptedData" placeholder="расшифрованные данные"></input>
-      <button onclick="vib();copyTo('decryptedData')" class="copybtn"></button>
-      <button onclick="vib();decryptData()" class="lilcenterbtn">Расшифровать данные</button>
+      <button onclick="copyTo('decryptedData')" class="copybtn"></button>
+      <button onclick="decryptData()" class="lilcenterbtn">Расшифровать данные</button>
     </div>
 
 
@@ -279,7 +279,7 @@
       <h1 class="center">Создание QR code</h1>
       <p>Введите сюда свой текст и вам с чат с ботом отправят  QR code с вашим текстом</p>
       <input id="qrtext" placeholder="Введите текст для создания QR code">
-      <button onclick="vib();sendQRCode()" class="lilcenterbtn">Создать QR code</button>
+      <button onclick="sendQRCode()" class="lilcenterbtn">Создать QR code</button>
     </div>
 
 
@@ -357,4 +357,4 @@
     }
   </script>
 </body>
-</html>
+</html>s
