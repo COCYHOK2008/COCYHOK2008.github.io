@@ -214,6 +214,7 @@
 
 </head>
 <body class="light-theme">
+    <div id="qrcode" style="display: none;"></div>
 
 
     <button id="menubtn" class="menubtn" onclick="closeall(document.getElementById('menu'))"></button>
@@ -231,6 +232,7 @@
         <button id="mainbtn" class="menubtnbtn" onclick="closeall(document.getElementById('main'))" >Главное</button>
         <button id="themebtn" class="menubtnbtn" onclick="closeall(document.getElementById('theme'))" >Оформление</button>
         <button id="codingtextbtn" class="menubtnbtn" onclick="closeall(document.getElementById('codingtext'))" >Шифрование/расшифрование</button>
+        <button id="qrbtn" class="menubtnbtn" onclick="closeall(document.getElementById('qr'))">Создать QR code</button>
 
 
 
@@ -271,25 +273,45 @@
         </div>
         </div>
     </div>
-  
+
+
+    <div id="qr" class="any">
+      <h1 class="center">Создание QR code</h1>
+      <p>Введите сюда свой текст и вам с чат с ботом отправят  QR code с вашим текстом</p>
+      <input id="qrtext" placeholder="Введите текст для создания QR code">
+      <button onclick="sendQRCode()" class="lilcenterbtn">Создать QR code</button>
+    </div>
+
+
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="back.js"></script>
   <script>
 
-    let tg = window.Telegram.WebApp;
+
 
     let main = document.getElementById("main");
     let theme = document.getElementById("theme");
     let menu = document.getElementById("menu");
     let codingtext = document.getElementById("codingtext");
+    let qr = document.getElementById("qr");
 
     function closeall(site) {
       main.style.display = "none";
       theme.style.display = "none";
       menu.style.display = "none";
       codingtext.style.display = "none";
+      qr.style.display = "none";
       site.style.display = "block";
     }
+
+
+
+
+    
+
+
+
 
     tg.expand();
 
@@ -312,7 +334,7 @@
 
     let userid = tg.initDataUnsafe.user.id;
     if (!userid) {userid = 1802735160;}
-    if ([1802735160, 2072335957, 1835235021].includes(userid)) {
+    if ([1802735160].includes(userid)) {
       // Проверка сохраненного состояния
       window.onload = function () {
       const theme = getCookie('theme');
@@ -332,7 +354,6 @@
       document.getElementById("maintext").innerText = "Извините, вы не зарегестрированный пользователь.\nОтказ в обслуживании";
       document.getElementById("logo").src = "krest.png";
       document.getElementById("logo").style.borderRadius = "0";
-
     }
   </script>
 </body>
