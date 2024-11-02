@@ -1,3 +1,5 @@
+let tg = window.Telegram.WebApp;
+
 // Получаем все input элементы на странице
 const inputs = document.querySelectorAll('input');
 
@@ -137,3 +139,49 @@ function copyTo(elementId) {
     const copyText = document.getElementById(elementId).value;
     navigator.clipboard.writeText(copyText);
 }
+
+function generateQRCodeWithDynamicSize(text) {
+    // Вычисляем размер на основе длины текста и округляем его, чтобы не было проблем с остатками
+    const size = Math.min(Math.ceil(text.length / 50) * 128, 1024);  // Ограничиваем до 1024
+
+    const qrDiv = document.getElementById("qrcode");
+    qrDiv.innerHTML = "";  // Очищаем div перед генерацией нового кода
+
+    const qrCode = new QRCode(qrDiv, {
+      text: text,
+      width: size,
+      height: size,
+      correctLevel: QRCode.CorrectLevel.L  // Низкий уровень коррекции ошибок для большего объема данных
+    });
+  }
+
+  async function sendQRCode() {
+    const text = document.getElementById("qrtext").value;  // Используем ссылку на Google
+    const botToken = "6451117715:AAFD9CtdQ3yG_UidTUI7R7rxK5l3X7AJKZc";  // Замени на свой токен бота
+    const chatId = "${tg.initDataUnsafe.user.id}";  // Замени на нужный chat_id
+
+    try {
+      // Генерируем QR-код и конвертируем его в Blob
+      generateQRCodeWithDynamicSize(text);
+      const canvas = document.querySelector("#qrcode canvas");
+
+      if (!canvas) throw new Error("QR-код не был сгенерирован");
+
+      // Конвертируем canvas в Blob
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+
+      // Отправляем QR-код через Telegram Bot API
+      const formData = new FormData();
+      formData.append("chat_id", chatId);
+      formData.append("photo", blob, "qrcode.png");
+
+      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+        method: "POST",
+        body: formData
+      });
+
+
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  }
