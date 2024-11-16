@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Div as Image</title>
+    <title>Download QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             display: flex;
@@ -14,16 +15,10 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        #imageDiv {
-            width: 300px;
-            height: 300px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/640px-Example.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #ccc;
+        #qrcode {
+            margin: 20px;
         }
         button {
-            margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -38,38 +33,32 @@
     </style>
 </head>
 <body>
-    <div id="imageDiv"></div>
-    <button id="downloadBtn">Download Image</button>
+    <h1>Create and Download QR Code</h1>
+    <div id="qrcode"></div>
+    <button id="downloadBtn">Download QR Code</button>
 
     <script>
+        // Генерируем QR-код
+        const qrContainer = document.getElementById('qrcode');
+        const qrCode = new QRCode(qrContainer, {
+            text: "https://example.com",
+            width: 256,
+            height: 256
+        });
+
+        // Добавляем функционал для скачивания
         document.getElementById('downloadBtn').addEventListener('click', () => {
-            const div = document.getElementById('imageDiv');
-
-            // Создаём Canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = div.offsetWidth;
-            canvas.height = div.offsetHeight;
-            const ctx = canvas.getContext('2d');
-
-            // Загружаем фон-картинку
-            const img = new Image();
-            img.crossOrigin = 'anonymous'; // Для обхода CORS, если нужно
-            img.src = getComputedStyle(div).backgroundImage.slice(5, -2);
-
-            img.onload = () => {
-                // Рисуем картинку на Canvas
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
+            // Находим <img>, который сгенерировал QRCode.js
+            const qrImage = qrContainer.querySelector('img');
+            if (qrImage) {
                 // Создаём ссылку для скачивания
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/jpeg'); // Получаем картинку как Data URL
-                link.download = 'div-image.jpg';
+                link.href = qrImage.src;
+                link.download = 'qrcode.png'; // Имя скачиваемого файла
                 link.click();
-            };
-
-            img.onerror = () => {
-                alert('Не удалось загрузить фон-картинку. Проверь ссылку.');
-            };
+            } else {
+                alert('QR-код ещё не готов!');
+            }
         });
     </script>
 </body>
