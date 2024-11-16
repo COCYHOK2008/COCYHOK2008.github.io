@@ -29,9 +29,31 @@
     </style>
 </head>
 <body>
-    <h1>Download an Image</h1>
-    <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/640px-Example.jpg" download="example.jpg">
-        <button>Download Image</button>
-    </a>
+    <h1>Download Image</h1>
+    <button id="downloadBtn">Download Image</button>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/640px-Example.jpg';
+
+            try {
+                // Скачиваем картинку как blob
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+
+                // Создаём временную ссылку
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'example.jpg';
+                link.click();
+
+                // Освобождаем память
+                URL.revokeObjectURL(link.href);
+            } catch (error) {
+                console.error('Ошибка при скачивании:', error);
+                alert('Не удалось скачать файл.');
+            }
+        });
+    </script>
 </body>
 </html>
