@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Image</title>
+    <title>Download Div as Image</title>
     <style>
         body {
             display: flex;
@@ -14,7 +14,16 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
+        #imageDiv {
+            width: 300px;
+            height: 300px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/640px-Example.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #ccc;
+        }
         button {
+            margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -29,30 +38,38 @@
     </style>
 </head>
 <body>
-    <h1>Download Image</h1>
+    <div id="imageDiv"></div>
     <button id="downloadBtn">Download Image</button>
 
     <script>
-        document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/640px-Example.jpg';
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const div = document.getElementById('imageDiv');
 
-            try {
-                // Скачиваем картинку как blob
-                const response = await fetch(imageUrl);
-                const blob = await response.blob();
+            // Создаём Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = div.offsetWidth;
+            canvas.height = div.offsetHeight;
+            const ctx = canvas.getContext('2d');
 
-                // Создаём временную ссылку
+            // Загружаем фон-картинку
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Для обхода CORS, если нужно
+            img.src = getComputedStyle(div).backgroundImage.slice(5, -2);
+
+            img.onload = () => {
+                // Рисуем картинку на Canvas
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // Создаём ссылку для скачивания
                 const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'example.jpg';
+                link.href = canvas.toDataURL('image/jpeg'); // Получаем картинку как Data URL
+                link.download = 'div-image.jpg';
                 link.click();
+            };
 
-                // Освобождаем память
-                URL.revokeObjectURL(link.href);
-            } catch (error) {
-                console.error('Ошибка при скачивании:', error);
-                alert('Не удалось скачать файл.');
-            }
+            img.onerror = () => {
+                alert('Не удалось загрузить фон-картинку. Проверь ссылку.');
+            };
         });
     </script>
 </body>
