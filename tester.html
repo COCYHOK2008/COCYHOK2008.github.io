@@ -41,21 +41,33 @@
         // Генерируем QR-код
         const qrContainer = document.getElementById('qrcode');
         const qrCode = new QRCode(qrContainer, {
-            text: "https://example.com",
+            text: "https://example.com", // Здесь можно подставить любой текст или ссылку
             width: 256,
             height: 256
         });
 
         // Добавляем функционал для скачивания
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            // Находим <img>, который сгенерировал QRCode.js
-            const qrImage = qrContainer.querySelector('img');
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const qrImage = qrContainer.querySelector('img'); // Находим сгенерированное изображение
+
             if (qrImage) {
-                // Создаём ссылку для скачивания
-                const link = document.createElement('a');
-                link.href = qrImage.src;
-                link.download = 'qrcode.png'; // Имя скачиваемого файла
-                link.click();
+                try {
+                    // Скачиваем картинку как blob
+                    const response = await fetch(qrImage.src);
+                    const blob = await response.blob();
+
+                    // Создаём временную ссылку
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'qrcode.png'; // Имя скачиваемого файла
+                    link.click();
+
+                    // Освобождаем память
+                    URL.revokeObjectURL(link.href);
+                } catch (error) {
+                    console.error('Ошибка при скачивании:', error);
+                    alert('Не удалось скачать файл.');
+                }
             } else {
                 alert('QR-код ещё не готов!');
             }
