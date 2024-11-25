@@ -7,27 +7,41 @@
 </head>
 <body>
   <script>
-    function polling() {
+    async function polling() {
       let offset = 0;
-      const token = "6351302491:AAGReWD3gXVrdOC7AwVt-9OdKlwaxBk895w";
-      const tokenhttps = `https://api.telegram.org/bot${token}/getUpdates?offset=${offset}`;
+      const token = "6351302491:AAGReWD3gXVrdOC7AwVt-9OdKlwaxBk895w"; // Замени на свой токен
+      const apiUrl = `https://api.telegram.org/bot${token}`;
+      
       while (true) {
-        new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await fetch(tokenhttps);
-        const data = response.json();
-        if (data.ok) {
-          const updates = data.result;
+        // Задержка 1 секунда
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-          for (let update of updates) {
-            const message = update.message;
-            if (message === "/start") {
-              await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${message.chat.id}&text=${message.text}`;
+        try {
+          // Запрос обновлений
+          const response = await fetch(`${apiUrl}/getUpdates?offset=${offset}`);
+          const data = await response.json();
+
+          if (data.ok) {
+            const updates = data.result;
+
+            for (let update of updates) {
+              const message = update.message;
+              if (message.text === "/start") {
+                // Отправляем ответ
+                await fetch(`${apiUrl}/sendMessage?chat_id=${message.chat.id}&text=Привет!`);
+              }
+              // Обновляем offset, чтобы обработать только новые сообщения
+              offset = update.update_id + 1;
             }
           }
+        } catch (error) {
+          console.error("Ошибка при запросе:", error);
         }
       }
     }
-    while (true) polling();
+
+    // Запуск функции
+    polling();
   </script>
 </body>
 </html>
